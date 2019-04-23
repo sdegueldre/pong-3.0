@@ -1,0 +1,32 @@
+{
+  "name": "pong-3.0",
+  "version": "0.0.1",
+  "description": "A pong clone with a twist",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html --public-url ./"  
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NadTr/Pong-3.0.git"
+  },
+  "keywords": [
+    "pong"
+  ],
+  "author": "Nadine Traufler & Samuel Degueldre",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NadTr/Pong-3.0/issues"
+  },
+  "homepage": "https://github.com/NadTr/Pong-3.0#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "pixi.js": "^4.8.7",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3"
+  }
+}
