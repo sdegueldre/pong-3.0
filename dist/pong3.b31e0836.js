@@ -42200,10 +42200,32 @@ var PIXI = _interopRequireWildcard(require("pixi.js"));
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 var app = new PIXI.Application({
-  width: 256,
-  height: 256
+  antialias: true
 });
 document.body.appendChild(app.view);
+var graphics = new PIXI.Graphics(); // Rectangle
+
+graphics.beginFill(0xFFFFFF);
+graphics.drawRect(20, app.screen.height / 2 - 50, 20, 100);
+graphics.endFill(); // Rectangle2
+
+graphics.beginFill(0xFFFFFF);
+graphics.drawRect(app.screen.width - 40, app.screen.height / 2 - 50, 20, 100);
+graphics.endFill(); //Filet
+
+for (var i = 0; i * 50 < app.screen.height; i++) {
+  graphics.beginFill(0xFFFFFF);
+  graphics.drawRect(app.screen.width / 2 - 2.5, 50 * i + 10, 5, 30);
+  graphics.endFill();
+} // Ball
+
+
+graphics.lineStyle(0); // draw a circle, set the lineStyle to zero so the circle doesn't have an outline
+
+graphics.beginFill(0xF91818, 1);
+graphics.drawCircle(250, 250, 10);
+graphics.endFill();
+app.stage.addChild(graphics);
 },{"pixi.js":"../node_modules/pixi.js/lib/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -42232,7 +42254,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "35137" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36093" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
