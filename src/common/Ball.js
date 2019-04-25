@@ -1,25 +1,32 @@
-import * as PIXI from 'pixi.js';
+const PIXI = require('pixi.js');
 
-export default class Ball extends PIXI.Graphics {
+module.exports  =  class Ball extends PIXI.Graphics {
   constructor(options){
     super();
 
+    let theta= (Math.random()-0.5)*2*Math.PI/3;
+    let speed= 6*(Math.round(Math.random()) * 2 - 1);
+    this.field=options.field;
+
     const defaults = {
-      velocity: {x:-4, y:-4},
-      x: 500,
-      y: 300,
+      x: this.field.w/2,
+      y: this.field.h/2,
+      velocity:{
+        x: speed*Math.cos(theta),
+        y: speed*Math.sin(theta)
+      },
       radius: 12,
       color: 0xFF0000
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);
 
-    this.field=options.field;
     this.beginFill(this.color);
     this.drawCircle(0, 0, this.radius);
     this.endFill();
     options.ticker.add(this.update.bind(this));
   }
+
   update(dt, ticker){
     this.x += this.velocity.x*dt;
     this.y += this.velocity.y*dt;
@@ -44,11 +51,12 @@ export default class Ball extends PIXI.Graphics {
       }
     }
   }
+
   reset(){
     this.x =this.field.w/2;
     this.y = this.field.h/2;
     let theta = (Math.random()-0.5)*2*Math.PI/3;
-    let speed = 6*(Math.round(Math.random()) * 2 - 1)
+    let speed = 6*(Math.round(Math.random()) * 2 - 1);
     this.velocity.x = speed*Math.cos(theta);
     this.velocity.y = speed*Math.sin(theta);
   }

@@ -1,6 +1,6 @@
-import * as PIXI from 'pixi.js';
+const PIXI = require('pixi.js');
 
-export default class Field extends PIXI.Graphics {
+module.exports  =  class Field extends PIXI.Graphics {
   constructor(options){
     super();
     const defaults = {

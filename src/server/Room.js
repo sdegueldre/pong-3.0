@@ -1,3 +1,4 @@
+//const Ball = require ('../common/Ball')
 const uuid = require('uuid/v1');
 
 module.exports = class Room {
@@ -28,22 +29,25 @@ module.exports = class Room {
     console.log('Enough players have joined the room: starting the game...');
     for(let player of this.players){
       player.emit('gameStarted');
-      player.on('playerMove', (position) => {
-        this.movePlayer(player.playerNumber, position);
-        for(let otherPlayer of this.players){
-          if(player == otherPlayer)
-            continue;
-          otherPlayer.emit('playerMove', {
-            playerNumber: player.playerNumber,
-            y: player.position.y
-          });
-        }
+      player.on('playerMove',(position) => movePlayer(player, position) );
+    }
+  }
+
+  movePlayer(player, position){
+    this.players[playerNumber-1].position = position;
+    for(let otherPlayer of this.players){
+      if(player == otherPlayer)
+        continue;
+      otherPlayer.emit('playerMove', {
+        playerNumber: player.playerNumber,
+        y: player.position.y
       });
     }
   }
 
-  movePlayer(playerNumber, position){
-    console.log(`Player ${playerNumber} wants to move to y=${position.y}`);
-    this.players[playerNumber-1].position = position;
+
+
+  createBall(){
+
   }
 }

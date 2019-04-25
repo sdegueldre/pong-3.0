@@ -1,6 +1,6 @@
-import * as PIXI from 'pixi.js';
+const PIXI = require('pixi.js');
 
-export default class Paddle extends PIXI.Graphics {
+module.exports  =  class Paddle extends PIXI.Graphics {
   constructor(options){
     super();
     const defaults = {
@@ -12,8 +12,6 @@ export default class Paddle extends PIXI.Graphics {
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);
-
-    console.log(defaults, options);
 
     this.beginFill(this.color);
     this.drawRect(-this.w/2, -this.h/2, this.w, this.h);
