@@ -1,4 +1,9 @@
-const PIXI = require('pixi.js');
+let PIXI
+try {
+  PIXI = require('pixi.js');
+} catch(error){
+  console.log(error);
+}
 
 module.exports  =  class Ball extends PIXI.Graphics {
   constructor(options){
@@ -20,11 +25,13 @@ module.exports  =  class Ball extends PIXI.Graphics {
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);
-
-    this.beginFill(this.color);
-    this.drawCircle(0, 0, this.radius);
-    this.endFill();
-    options.ticker.add(this.update.bind(this));
+    if(PIXI){
+      this.graphics = new PIXI.Graphics();
+      this.graphics.beginFill(this.color);
+      this.graphics.drawCircle(0, 0, this.radius);
+      this.graphics.endFill();
+      options.ticker.add(this.update.bind(this));
+    }
   }
 
   update(dt, ticker){
@@ -60,4 +67,15 @@ module.exports  =  class Ball extends PIXI.Graphics {
     this.velocity.x = speed*Math.cos(theta);
     this.velocity.y = speed*Math.sin(theta);
   }
+
+  set x(value){
+    this.x = value;
+    this.graphics.x = value;
+  }
+
+  set y(value){
+    this.y = value;
+    this.graphics.y = value;
+  }
+
 }
