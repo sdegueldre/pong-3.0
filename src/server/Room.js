@@ -35,7 +35,7 @@ module.exports = class Room {
         x: player.playerNumber == 1 ? 30 : 800-30,
         y: 300
       });
-      player.on('playerMove', (position) => movePlayer(player, position));
+      player.on('playerMove', (position) => this.movePlayer(player, position));
     }
     this.ball = new Ball(this.field, {
       paddles: this.players.map(player => player.paddle)
@@ -43,8 +43,7 @@ module.exports = class Room {
     this.broadcast('gameStarted', this.ball)
     setInterval(() => this.broadcast('ballSync', this.ball), 50);
     this.ball.on('out', () => {
-      console.log('Ball went oob:', this.ball);
-      console.log('reseting ball and broadcasting ballSync');
+      console.log('Ball went oob: reseting ball and broadcasting ballSync');
       this.ball.reset();
       this.broadcast('ballSync', this.ball);
     });
@@ -52,7 +51,7 @@ module.exports = class Room {
   }
 
   movePlayer(player, position){
-    this.players[playerNumber-1].position = position;
+    this.players[player.playerNumber-1].position = position;
     for(let otherPlayer of this.players){
       if(player == otherPlayer)
         continue;

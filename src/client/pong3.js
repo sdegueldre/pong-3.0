@@ -37,7 +37,7 @@ if(location.hash == ''){
     console.log('http://localhost:1234/#'+id);
   })
 
-  socket.on('gameStarted', (ball) => gameInit(player1.graphics, ball));
+  socket.on('gameStarted', (ball) => gameInit(player1, ball));
 } else {
   const roomId = location.hash.slice(1);
   socket.emit('joinRoom', roomId);
@@ -45,7 +45,7 @@ if(location.hash == ''){
   socket.on('joinedRoom', () => {
     console.log('Successfully joined room '+roomId);
   })
-  socket.on('gameStarted', (ball) => gameInit(player2.graphics, ball));
+  socket.on('gameStarted', (ball) => gameInit(player2, ball));
 }
 
 socket.on('playerMove', (data) => {
@@ -61,8 +61,8 @@ socket.on('playerMove', (data) => {
 
 function gameInit(player, ballData){
   console.log('Game started');
-  player.on('mousemove', (e) => {
-    player.y = e.data.global.y;
+  window.addEventListener('mousemove', (e) => {
+    player.y = e.layerY;
     socket.emit('playerMove', {y: player.y});
   });
 
@@ -74,7 +74,6 @@ function gameInit(player, ballData){
     paddles:[player1,player2],
   });
   socket.on('ballSync', (newBall) => {
-    console.log('Got ballSync event:', newBall);
     ball.x = newBall.x;
     ball.y = newBall.y;
     ball.velocity = newBall.velocity;
