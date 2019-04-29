@@ -31,7 +31,7 @@ module.exports  =  class BaseBall {
     for(let paddle  of this.paddles){
       if(paddle.collide(this)){
         if((paddle == this.paddles[0] && this.velocity.x < 0) || (paddle == this.paddles[1] && this.velocity.x > 0)){
-          let theta = Math.PI*(paddle.y-this.y)/(3*paddle.h/2);
+          let theta = Math.PI*(paddle.y-this.y)/(4*paddle.h/2);
           let speed = 1.05*Math.hypot(this.velocity.x, this.velocity.y);
           this.velocity.y = -speed*Math.sin(theta);
 
