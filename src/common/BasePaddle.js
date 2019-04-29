@@ -5,7 +5,7 @@ module.exports  =  class Paddle {
       y:0,
       w: 20,
       h: 100,
-      color: 0xFFFFFF
+      color: 0xFFFFFF,
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);
