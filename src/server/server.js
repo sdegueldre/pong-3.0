@@ -3,7 +3,8 @@ const socketIO = require('socket.io');
 const Room = require('./Room');
 
 const app = express();
-const server = app.listen(process.env.PORT || 3000, listen)
+const server = app.listen(process.env.PORT || 3000, listen);
+app.use(express.static('dist'));
 
 function listen(){
   console.log('Server listening:', server.address());
