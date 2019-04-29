@@ -27,7 +27,7 @@ player2.interactive = true;
 app.stage.addChild(player1.graphics, player2.graphics);
 
 
-const socket = io.connect('/:3000');
+const socket = io.connect();
 const location = new URL(window.location);
 if(location.hash == ''){
   socket.emit('createRoom');
