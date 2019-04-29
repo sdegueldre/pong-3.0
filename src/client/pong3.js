@@ -34,7 +34,9 @@ if(location.hash == ''){
 
   socket.on('roomCreated', (id) => {
     console.log('Successfully created room, join here:');
-    console.log('http://localhost:1234/#'+id);
+    let url = new URL(window.location);
+    url.hash = '#'+id;
+    console.log(url.href);
   })
 
   socket.on('gameStarted', (ball) => gameInit(player1, ball));

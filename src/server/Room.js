@@ -53,13 +53,13 @@ module.exports = class Room {
   }
 
   movePlayer(player, position){
-    this.players[player.playerNumber-1].position = position;
+    this.players[player.playerNumber-1].paddle.y = position.y;
     for(let otherPlayer of this.players){
       if(player == otherPlayer)
         continue;
       otherPlayer.emit('playerMove', {
         playerNumber: player.playerNumber,
-        y: player.position.y
+        y: player.paddle.y
       });
     }
   }
