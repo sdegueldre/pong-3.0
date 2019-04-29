@@ -1,6 +1,5 @@
 const Field = require ('../common/BaseField');
 const Paddle = require ('../common/BasePaddle');
-const Ball = require ('../common/BaseBall');
 const uuid = require('uuid/v1');
 
 module.exports = class Room {
@@ -31,7 +30,6 @@ module.exports = class Room {
 
   startGame(){
     console.log('Enough players have joined the room: starting the game...');
-    this.field = new Field();
     for(let player of this.players){
       player.paddle = new Paddle({
         x: player.playerNumber == 1 ? 30 : 800-30,
@@ -39,17 +37,16 @@ module.exports = class Room {
       });
       player.on('playerMove', (position) => this.movePlayer(player, position));
     }
-    this.ball = new Ball(this.field, {
-      paddles: this.players.map(player => player.paddle)
-    });
+    this.field = new Field(this.players.map(player => player.paddle));
+    this.ball = this.field.ball;
     this.broadcast('gameStarted', this.ball)
     setInterval(() => this.broadcast('ballSync', this.ball), 50);
-    this.ball.on('out', () => {
+    this.field.on('outOfField', () => {
       console.log('Ball went oob: reseting ball and broadcasting ballSync');
       this.ball.reset();
-      this.broadcast('ballSync', this.ball);
+      this.broadcast('playerScored', {ball: this.ball, score: field.score);
     });
-    this.tick(this.ball);
+    this.tick(this.field);
   }
 
   movePlayer(player, position){
