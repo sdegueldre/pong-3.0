@@ -12,6 +12,8 @@ module.exports = class Room {
     this.players = [this.owner];
     this.maxPlayers = 2;
     this.minPlayers = 2;
+    this.tickers = [];
+    console.log('Created room with id', this.id);
   }
 
   join(socket){
@@ -64,16 +66,26 @@ module.exports = class Room {
 
   tick(object){
     let lastTick = Date.now();
-    setInterval(() => {
+    this.tickers.push(setInterval(() => {
       let now = Date.now();
       let dt = now - lastTick;
       lastTick = now;
       object.update.bind(object)(dt/16.667);
-    }, 10)
+    }, 10));
   }
 
   broadcast(type, data){
     for(let player of this.players)
       player.emit(type, data);
+  }
+
+  close(){
+    console.log('Closing room with id', this.id);
+    this.broadcast('roomClosed');
+    for(let ticker of this.tickers)
+      clearInterval(ticker);
+    for(let player of this.players){
+      player.disconnect();
+    }
   }
 }

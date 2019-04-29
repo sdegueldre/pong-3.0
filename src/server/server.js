@@ -32,11 +32,15 @@ io.sockets.on('connection', (socket) => {
       socket.emit('roomNotFound', roomId);
       return;
     }
+    socket.room = roomToJoin;
     roomToJoin.join(socket);
   })
 
   socket.on('disconnect', () => {
     console.log('client disconnected:', socket.id);
+    if(socket.room)
+      socket.room.close();
+    rooms.splice(rooms.indexOf(socket.room), 1);
     connections.splice(connections.indexOf(socket), 1);
-  })
+  });
 })

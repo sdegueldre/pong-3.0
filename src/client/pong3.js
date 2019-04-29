@@ -48,6 +48,11 @@ if(location.hash == ''){
   socket.on('gameStarted', (ball) => gameInit(player2, ball));
 }
 
+socket.on('roomClosed', () => {
+  console.log('Room closed, reloading');
+  window.location.reload();
+});
+
 socket.on('playerMove', (data) => {
   switch(data.playerNumber){
     case 1:
