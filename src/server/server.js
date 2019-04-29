@@ -24,7 +24,9 @@ io.sockets.on('connection', (socket) => {
   });
 
   socket.on('createRoom', () => {
-    rooms.push(new Room(socket));
+    let room = new Room(socket)
+    rooms.push(room);
+    socket.room = room;
   })
 
   socket.on('joinRoom', (roomId) => {
