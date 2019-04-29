@@ -3,7 +3,8 @@ const socketIO = require('socket.io');
 const Room = require('./Room');
 
 const app = express();
-const server = app.listen(process.env.PORT || 3000, listen)
+const server = app.listen(process.env.PORT || 3000, listen);
+app.use(express.static('dist'));
 
 function listen(){
   console.log('Server listening:', server.address());
@@ -32,11 +33,15 @@ io.sockets.on('connection', (socket) => {
       socket.emit('roomNotFound', roomId);
       return;
     }
+    socket.room = roomToJoin;
     roomToJoin.join(socket);
   })
 
   socket.on('disconnect', () => {
     console.log('client disconnected:', socket.id);
+    if(socket.room)
+      socket.room.close();
+    rooms.splice(rooms.indexOf(socket.room), 1);
     connections.splice(connections.indexOf(socket), 1);
-  })
+  });
 })

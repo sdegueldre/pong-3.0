@@ -1,20 +1,18 @@
 const PIXI = require('pixi.js');
-const Paddle = require('../common/Paddle');
-const Field = require('../common/Field');
-const Ball = require('../common/Ball');
+const Paddle = require('./components/Paddle');
+const Field = require('./components/Field');
+const Ball = require('./components/Ball');
 const io = require('socket.io-client/dist/socket.io');
 
 const app = new PIXI.Application({ antialias: true });
 document.body.appendChild(app.view);
-
-window.addEventListener('keydown', console.log);
 
 // app.stage.addChild(graphics);
 let field = new Field({
   h: app.screen.height,
   w: app.screen.width
 });
-app.stage.addChild(field);
+app.stage.addChild(field.graphics);
 
 let player1 = new Paddle({
   x: 30,
@@ -26,17 +24,19 @@ let player2 = new Paddle({
   y: app.screen.height/2
 });
 player2.interactive = true;
-app.stage.addChild(player1, player2);
+app.stage.addChild(player1.graphics, player2.graphics);
 
 
-const socket = io.connect('http://localhost:3000');
+const socket = io.connect();
 const location = new URL(window.location);
-console.log(location);
 if(location.hash == ''){
   socket.emit('createRoom');
 
   socket.on('roomCreated', (id) => {
-    console.log('Successfully created room with id '+id);
+    console.log('Successfully created room, join here:');
+    let url = new URL(window.location);
+    url.hash = '#'+id;
+    console.log(url.href);
   })
 
   socket.on('gameStarted', (ball) => gameInit(player1, ball));
@@ -50,6 +50,11 @@ if(location.hash == ''){
   socket.on('gameStarted', (ball) => gameInit(player2, ball));
 }
 
+socket.on('roomClosed', () => {
+  console.log('Room closed, reloading');
+  window.location.reload();
+});
+
 socket.on('playerMove', (data) => {
   switch(data.playerNumber){
     case 1:
@@ -59,22 +64,26 @@ socket.on('playerMove', (data) => {
       player2.y = data.y;
       break;
   }
-})
+});
 
 function gameInit(player, ballData){
   console.log('Game started');
-  player.on('mousemove', (e) => {
-    player.y = e.data.global.y;
+  window.addEventListener('mousemove', (e) => {
+    player.y = e.layerY;
     socket.emit('playerMove', {y: player.y});
   });
 
-    let ball = new Ball({
-      ticker: app.ticker,
-      field:field,
-      x:ballData.x,
-      y:ballData.y,
-      velocity: ballData.velocity,
-      paddles:[player1,player2],
-    });
-    app.stage.addChild(ball);
+  let ball = new Ball(field, {
+    ticker: app.ticker,
+    x:ballData.x,
+    y:ballData.y,
+    velocity: ballData.velocity,
+    paddles:[player1,player2],
+  });
+  socket.on('ballSync', (newBall) => {
+    ball.x = newBall.x;
+    ball.y = newBall.y;
+    ball.velocity = newBall.velocity;
+  })
+  app.stage.addChild(ball.graphics);
 }

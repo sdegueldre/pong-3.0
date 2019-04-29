@@ -1,8 +1,5 @@
-const PIXI = require('pixi.js');
-
-module.exports  =  class Paddle extends PIXI.Graphics {
+module.exports  =  class Paddle {
   constructor(options){
-    super();
     const defaults = {
       x:0,
       y:0,
@@ -12,11 +9,8 @@ module.exports  =  class Paddle extends PIXI.Graphics {
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);
-
-    this.beginFill(this.color);
-    this.drawRect(-this.w/2, -this.h/2, this.w, this.h);
-    this.endFill();
   }
+
   collide(ball){
     var distX = Math.abs(ball.x - this.x)-this.w/2-ball.radius;
     var distY = Math.abs(ball.y - this.y)-this.h/2-ball.radius;;
