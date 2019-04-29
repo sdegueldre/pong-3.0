@@ -30,7 +30,7 @@ io.sockets.on('connection', (socket) => {
   })
 
   socket.on('joinRoom', (roomId) => {
-    const roomToJoin = rooms.find((room) => room.id = roomId);
+    const roomToJoin = rooms.find((room) => room.id == roomId);
     if(!roomToJoin){
       socket.emit('roomNotFound', roomId);
       return;
