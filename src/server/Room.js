@@ -40,11 +40,14 @@ module.exports = class Room {
     this.field = new Field(this.players.map(player => player.paddle));
     this.ball = this.field.ball;
     this.broadcast('gameStarted', this.ball)
-    setInterval(() => this.broadcast('ballSync', this.ball), 50);
+    setInterval(() => {
+      //console.log('Planned ballSync:', this.ball);
+      this.broadcast('ballSync', this.ball);
+    }, 50);
     this.field.on('outOfField', () => {
-      console.log('Ball went oob: reseting ball and broadcasting ballSync');
-      this.ball.reset();
-      this.broadcast('playerScored', {ball: this.ball, score: field.score);
+      console.log('player scored: reseting ball and updating score:', this.field.score);
+      this.ball.reset(this.field.w/2, this.field.h/2);
+      this.broadcast('playerScored', {ball: this.ball, score: this.field.score});
     });
     this.tick(this.field);
   }

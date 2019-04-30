@@ -11,7 +11,7 @@ module.exports  =  class BaseField {
     Object.assign(this, defaults);
     this.players = players;
     this.ball = new Ball(this.w/2, this.h/2);
-    this.score = { player1: 0, player2: 0}
+    this.score = {player1: 0, player2: 0}
   }
 
   collideWall(){
@@ -43,9 +43,11 @@ module.exports  =  class BaseField {
     if (this.ball.x - this.ball.radius < 0){
       this.score.player2 += 1;
       this.ball.reset(this.w/2, this.h/2);
+      this.emit('outOfField');
     } else if (this.ball.x + this.ball.radius >this.w){
       this.score.player1 += 1;
       this.ball.reset(this.w/2, this.h/2);
+      this.emit('outOfField');
     }
   }
 
@@ -54,8 +56,8 @@ module.exports  =  class BaseField {
     this.collideWall();
     this.collidePaddle();
     this.outOfField();
-
   }
+
   on(type, callback){
     this.listeners.push({type: type, callback: callback});
   }

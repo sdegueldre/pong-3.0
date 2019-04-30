@@ -74,11 +74,17 @@ function gameInit(player, ballData){
     w: app.screen.width
   }, app.ticker);
 
-
-  socket.on('ballSync', (newBall) => {
+  let setBall = (newBall) => {
     field.ball.x = newBall.x;
     field.ball.y = newBall.y;
     field.ball.velocity = newBall.velocity;
+  }
+
+  socket.on('ballSync', setBall)
+  socket.on('playerScored', (ballScore) => {
+    setBall(ballScore.ball);
+    field.score = ballScore.score;
+    field.updateScore();
   })
 
   app.stage.addChild(field.ball.graphics);
