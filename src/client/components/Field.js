@@ -16,15 +16,24 @@ module.exports = class Field extends BaseField {
       fill: 0xffffff,
     });
     this.updateScore();
+    this.stage = app.stage;
     app.ticker.add(this.update.bind(this));
-    this.balls[0] = new Ball(ballData.x, ballData.y, {velocity: ballData.velocity} );
-    app.stage.addChild(this.graphics, this.balls[0].graphics, players[0].graphics, players[1].graphics, this.scoreText)
-
+    this.balls[0] = new Ball(ballData.x, ballData.y, {velocity: ballData.velocity});
+    this.stage.addChild(this.graphics, players[0].graphics, players[1].graphics, this.scoreText, this.balls[0].graphics,)
   }
 
   updateScore(){
     this.scoreText.text = `${this.score.player1} - ${this.score.player2}`;
     this.scoreText.x = this.w - this.scoreText.width - 10;
     this.scoreText.y = this.h - this.scoreText.height - 5;
+  }
+
+  setBalls(balls){
+    // Remove all balls from the stage
+    this.stage.removeChildren(4);
+    // Create new balls from the server data
+    this.balls = balls.map(ballData => new Ball(ballData.x, ballData.y, {velocity: ballData.velocity}));
+    // Add the balls back to the stage
+    this.stage.addChild(...this.balls.map(b => b.graphics));
   }
 }

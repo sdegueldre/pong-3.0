@@ -15,28 +15,28 @@ module.exports  =  class BaseField {
   }
 
   collideWall(){
-    for( let ball of this.balls){
-      if((this.ball.y - this.ball.radius < 0) && (this.ball.velocity.y < 0)){
-        return this.ball.velocity.y *= -1;
-      } else if((this.ball.y + this.ball.radius >this.h) && (this.ball.velocity.y > 0)){
-        return this.ball.velocity.y *= -1;
+    for(let ball of this.balls){
+      if((ball.y - ball.radius < 0) && (ball.velocity.y < 0)){
+        return ball.velocity.y *= -1;
+      } else if((ball.y + ball.radius >this.h) && (ball.velocity.y > 0)){
+        return ball.velocity.y *= -1;
       }
     }
   }
 
   collidePaddle(){
-    for( let ball of this.balls){
+    for(let ball of this.balls){
       for(let player of this.players){
-        if(player.collide(this.ball)){
-          if((player == this.players[0] && this.ball.velocity.x < 0) || (player == this.players[1] && this.ball.velocity.x > 0)){
-            let theta = Math.PI*(player.y-this.ball.y)/(4*player.h/2);
-            let speed = 1.05*Math.hypot(this.ball.velocity.x, this.ball.velocity.y);
-            this.ball.velocity.y = -speed*Math.sin(theta);
+        if(player.collide(ball)){
+          if((player == this.players[0] && ball.velocity.x < 0) || (player == this.players[1] && ball.velocity.x > 0)){
+            let theta = Math.PI*(player.y-ball.y)/(4*player.h/2);
+            let speed = 1.05*Math.hypot(ball.velocity.x, ball.velocity.y);
+            ball.velocity.y = -speed*Math.sin(theta);
 
-            if(this.ball.velocity.x>0)
-              this.ball.velocity.x = -speed*Math.cos(theta);
+            if(ball.velocity.x>0)
+              ball.velocity.x = -speed*Math.cos(theta);
             else
-              this.ball.velocity.x = speed*Math.cos(theta);
+              ball.velocity.x = speed*Math.cos(theta);
           }
         }
       }
@@ -44,26 +44,29 @@ module.exports  =  class BaseField {
   }
 
   outOfField(){
-    for( let ball of this.balls){
-      if (this.ball.x - this.ball.radius < 0){
-        this.score.player2 += 1;
-        this.ball.reset(this.w/2, this.h/2);
+    for(let ball of this.balls){
+      if(ball.x - ball.radius < 0 || ball.x + ball.radius > this.w){
+        if(ball.x - ball.radius < 0)
+          this.score.player2 += 1;
+        else
+          this.score.player1 += 1;
         this.emit('outOfField');
-      } else if (this.ball.x + this.ball.radius >this.w){
-        this.score.player1 += 1;
-        this.ball.reset(this.w/2, this.h/2);
-        this.emit('outOfField');
+        this.balls.splice(this.balls.indexOf(ball), 1);
       }
+    }
+    if(this.balls.length <= 0){
+      this.balls.push(new Ball(this.w/2, this.h/2));
+      this.balls.push(new Ball(this.w/2, this.h/2));
     }
   }
 
   update(dt){
-    for( let ball of this.balls){
-      this.ball.move(dt);
-      this.collideWall();
-      this.collidePaddle();
-      this.outOfField();
+    for(let ball of this.balls){
+      ball.move(dt);
     }
+    this.collideWall();
+    this.collidePaddle();
+    this.outOfField();
   }
 
   on(type, callback){

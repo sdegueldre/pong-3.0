@@ -79,12 +79,11 @@ function gameInit(player, ballData){
     field.ball.velocity = newBall.velocity;
   }
 
-  socket.on('ballSync', setBall)
+  socket.on('ballSync', field.setBalls.bind(field));
   socket.on('playerScored', (ballScore) => {
-    setBall(ballScore.ball);
+    console.log('player scored, ballScore', ballScore);
+    field.setBalls.bind(field)(ballScore.balls);
     field.score = ballScore.score;
     field.updateScore();
   })
-
-
 }
