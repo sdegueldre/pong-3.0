@@ -3,7 +3,7 @@ const BaseField = require('../../common/BaseField');
 const Ball = require('./Ball');
 
 module.exports = class Field extends BaseField {
-  constructor(players, ballData, options, ticker){
+  constructor(app, players, ballData, options){
     super(players, options);
     this.graphics = new PIXI.Graphics();
     for(let i = 0; i*50 < this.h; i++){
@@ -16,8 +16,10 @@ module.exports = class Field extends BaseField {
       fill: 0xffffff,
     });
     this.updateScore();
-    ticker.add(this.update.bind(this));
-    this.ball = new Ball(ballData.x, ballData.y, {velocity: ballData.velocity} );
+    app.ticker.add(this.update.bind(this));
+    this.balls[0] = new Ball(ballData.x, ballData.y, {velocity: ballData.velocity} );
+    app.stage.addChild(this.graphics, this.balls[0].graphics, players[0].graphics, players[1].graphics, this.scoreText)
+
   }
 
   updateScore(){

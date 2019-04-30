@@ -19,7 +19,6 @@ let player2 = new Paddle({
   y: app.screen.height/2
 });
 player2.interactive = true;
-app.stage.addChild(player1.graphics, player2.graphics);
 
 
 const socket = io.connect();
@@ -69,10 +68,10 @@ function gameInit(player, ballData){
     socket.emit('playerMove', {y: player.y});
   });
 
-  let field = new Field([player1, player2], ballData, {
+  let field = new Field(app, [player1, player2], ballData, {
     h: app.screen.height,
     w: app.screen.width
-  }, app.ticker);
+  });
 
   let setBall = (newBall) => {
     field.ball.x = newBall.x;
@@ -87,8 +86,5 @@ function gameInit(player, ballData){
     field.updateScore();
   })
 
-  app.stage.addChild(field.ball.graphics);
-  app.stage.addChild(field.graphics);
-  app.stage.addChild(field.scoreText);
 
 }
