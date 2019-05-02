@@ -38,13 +38,24 @@ module.exports = class Room {
       player.on('playerMove', (position) => this.movePlayer(player, position));
     }
     this.field = new Field(this.players.map(player => player.paddle));
-    this.broadcast('gameStarted', this.field.balls[0])
+    this.broadcast('gameStarted', this.field.balls[0]);
+    this.broadcast('bonusSpawned', this.field.bonuses[0]);
     setInterval(() => {
       this.broadcast('ballSync', this.field.balls);
     }, 50);
     this.field.on('outOfField', () => {
-      this.broadcast('playerScored', {balls: this.field.balls, score: this.field.score});
+      this.broadcast('playerScored', {
+        balls: this.field.balls,
+        score: this.field.score
+      });
     });
+    this.field.on('bonusCollected', () => {
+      this.field.addBonus();
+      this.broadcast('bonusCollected', {
+        bonuses: this.field.bonuses,
+        players: this.players.map(p => p.paddle)
+      });
+    })
     this.tick(this.field);
   }
 

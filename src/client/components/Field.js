@@ -1,6 +1,7 @@
 const PIXI = require('pixi.js');
 const BaseField = require('../../common/BaseField');
 const Ball = require('./Ball');
+const DoubleBall = require('./bonuses/DoubleBall');
 
 module.exports = class Field extends BaseField {
   constructor(app, players, ballData, options){
@@ -19,7 +20,14 @@ module.exports = class Field extends BaseField {
     this.stage = app.stage;
     app.ticker.add(this.update.bind(this));
     this.balls[0] = new Ball(ballData.x, ballData.y, {velocity: ballData.velocity});
-    this.stage.addChild(this.graphics, players[0].graphics, players[1].graphics, this.scoreText, this.balls[0].graphics,)
+    this.bonuses = [];
+    this.stage.addChild(
+      this.graphics,
+      players[0].graphics,
+      players[1].graphics,
+      this.scoreText,
+      this.balls[0].graphics
+    );
   }
 
   updateScore(){
@@ -30,10 +38,39 @@ module.exports = class Field extends BaseField {
 
   setBalls(balls){
     // Remove all balls from the stage
-    this.stage.removeChildren(4);
+    this.balls.forEach(b => this.stage.removeChild(b.graphics));
     // Create new balls from the server data
     this.balls = balls.map(ballData => new Ball(ballData.x, ballData.y, {velocity: ballData.velocity}));
     // Add the balls back to the stage
-    this.stage.addChild(...this.balls.map(b => b.graphics));
+    this.balls.forEach(b => this.stage.addChild(b.graphics));
+  }
+
+  spawnBonus(bonusData){
+    console.log('Spawning bonus!', bonusData);
+    switch(bonusData.type){
+      case 'DoubleBall':
+        let bonus = new DoubleBall(bonusData.x, bonusData.y);
+        this.bonuses.push(bonus);
+        this.stage.addChild(bonus.graphics);
+        break;
+      default:
+        console.log('Tried to spawn unknown bonus: ', bonusData.type);
+    }
+  }
+
+  removeBall(ball){
+    super.removeBall(ball);
+    this.stage.removeChild(ball.graphics);
+  }
+
+  removeBonus(bonus){
+    super.removeBonus(bonus)
+    this.stage.removeChild(bonus.graphics);
+  }
+
+  setBonuses(bonuses){
+    this.bonuses.forEach(b => this.stage.removeChild(b.graphics));
+    this.bonuses = bonuses.map(b => new DoubleBall(b.x, b.y));
+    this.bonuses.forEach(b => this.stage.addChild(b.graphics));
   }
 }

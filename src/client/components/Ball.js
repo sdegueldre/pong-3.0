@@ -8,7 +8,10 @@ module.exports = class Ball extends BaseBall {
     this.graphics.beginFill(this.color);
     this.graphics.drawCircle(0, 0, this.radius);
     this.graphics.endFill();
-    
+  }
+
+  removeBall(){
+    console.log("Not gonna remove ball until server says so.");
   }
 
   set x(value){

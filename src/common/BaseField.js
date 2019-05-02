@@ -1,4 +1,5 @@
 const Ball = require ('../common/BaseBall');
+const BaseDoubleBall = require('./bonuses/BaseDoubleBall');
 
 module.exports  =  class BaseField {
   constructor(players, options){
@@ -10,6 +11,8 @@ module.exports  =  class BaseField {
     Object.assign(defaults, options);
     Object.assign(this, defaults);
     this.players = players;
+    this.bonuses = [];
+    this.addBonus();
     this.balls = [new Ball(this.w/2, this.h/2)];
     this.score = {player1: 0, player2: 0}
   }
@@ -51,12 +54,25 @@ module.exports  =  class BaseField {
         else
           this.score.player1 += 1;
         this.emit('outOfField');
-        this.balls.splice(this.balls.indexOf(ball), 1);
+        this.removeBall(ball);
       }
     }
     if(this.balls.length <= 0){
       this.balls.push(new Ball(this.w/2, this.h/2));
-      this.balls.push(new Ball(this.w/2, this.h/2));
+    }
+  }
+
+  collideBonus(){
+    for(let ball of this.balls){
+      for(let bonus of this.bonuses){
+        if(bonus.collide(ball) /*&& ball.lastHitPlayer*/){
+          //ball.lastHitPlayer.addBonus(bonus);
+          console.log('collected bonus!');
+          this.removeBonus(bonus);
+          bonus.activate(this);
+          this.emit('bonusCollected');
+        }
+      }
     }
   }
 
@@ -67,6 +83,7 @@ module.exports  =  class BaseField {
     this.collideWall();
     this.collidePaddle();
     this.outOfField();
+    this.collideBonus();
   }
 
   on(type, callback){
@@ -77,5 +94,17 @@ module.exports  =  class BaseField {
     this.listeners
       .filter(listener => listener.type == type)
       .forEach(listener => listener.callback(data));
+  }
+
+  removeBall(ball){
+    this.balls.splice(this.balls.indexOf(ball), 1);
+  }
+
+  removeBonus(bonus){
+    this.bonuses.splice(this.bonuses.indexOf(bonus), 1);
+  }
+
+  addBonus(){
+    this.bonuses.push(new BaseDoubleBall(this.w/3 + Math.random()*this.w/3, Math.random()*this.h));
   }
 }

@@ -73,17 +73,21 @@ function gameInit(player, ballData){
     w: app.screen.width
   });
 
-  let setBall = (newBall) => {
-    field.ball.x = newBall.x;
-    field.ball.y = newBall.y;
-    field.ball.velocity = newBall.velocity;
-  }
-
   socket.on('ballSync', field.setBalls.bind(field));
   socket.on('playerScored', (ballScore) => {
-    console.log('player scored, ballScore', ballScore);
     field.setBalls.bind(field)(ballScore.balls);
     field.score = ballScore.score;
     field.updateScore();
-  })
+  });
+  socket.on('bonusSpawned', field.spawnBonus.bind(field));
+  socket.on('bonusCollected', (bonusesPaddles) => {
+    console.log('bonus collected', bonusesPaddles);
+    field.setBonuses(bonusesPaddles.bonuses);
+  });
+}
+
+function setBall(newBall){
+  field.ball.x = newBall.x;
+  field.ball.y = newBall.y;
+  field.ball.velocity = newBall.velocity;
 }
