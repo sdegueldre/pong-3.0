@@ -6,8 +6,8 @@ module.exports  =  class BaseField {
   constructor(options){
     this.listeners = [];
     const defaults = {
-      h: 600,
-      w: 800,
+      h: 1080,
+      w: 1440,
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);
@@ -78,9 +78,7 @@ module.exports  =  class BaseField {
   collectBonuses(){
     for(let ball of this.balls){
       for(let bonus of this.bonuses){
-        if(bonus.collide(ball) /*&& ball.lastHitPlayer*/){
-          //ball.lastHitPlayer.addBonus(bonus);
-          console.log('collected bonus!');
+        if(bonus.collide(ball)){
           this.removeBonus(bonus);
           bonus.collect(ball, this);
           this.emit('bonusCollected');

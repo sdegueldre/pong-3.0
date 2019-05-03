@@ -1,13 +1,13 @@
 module.exports  =  class BaseBall {
   constructor(x, y, options){
     let theta = (Math.random()-0.5)*2*Math.PI/3;
-    let speed = 6*(Math.round(Math.random()) * 2 - 1);
+    let speed = 10*(Math.round(Math.random()) * 2 - 1);
     const defaults = {
       velocity:{
         x: speed*Math.cos(theta),
         y: speed*Math.sin(theta)
       },
-      radius: 12,
+      radius: 18,
       color: 0xFF0000
     }
     Object.assign(defaults, options);

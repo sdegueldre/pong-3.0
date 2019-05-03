@@ -1,10 +1,10 @@
 module.exports  =  class BasePaddle {
   constructor(options){
     const defaults = {
-      x:0,
-      y:0,
-      w: 20,
-      h: 100,
+      x: 0,
+      y: 0,
+      w: 30,
+      h: 150,
       color: 0xFFFFFF,
       bonuses: []
     }

@@ -4,7 +4,11 @@ const Field = require('./components/Field');
 const Ball = require('./components/Ball');
 const io = require('socket.io-client/dist/socket.io');
 
-const app = new PIXI.Application({ antialias: true });
+const app = new PIXI.Application({
+  antialias: true,
+  width: 1440,
+  height: 1080
+});
 document.body.appendChild(app.view);
 
 
@@ -62,9 +66,9 @@ socket.on('playerMove', (data) => {
 
 function gameInit(player, ballData){
   console.log('Game started');
-  console.log(ballData);
   window.addEventListener('mousemove', (e) => {
-    player.y = e.layerY;
+    let cvHeight = document.querySelector('canvas').clientHeight;
+    player.y = e.layerY*1080/cvHeight;
     socket.emit('playerMove', {y: player.y});
   });
 
@@ -81,7 +85,6 @@ function gameInit(player, ballData){
   });
   socket.on('bonusSpawned', field.spawnBonus.bind(field));
   socket.on('bonusCollected', (bonusesPaddles) => {
-    console.log('bonus collected', bonusesPaddles);
     field.setBonuses(bonusesPaddles.bonuses);
   });
 }
@@ -91,3 +94,12 @@ function setBall(newBall){
   field.ball.y = newBall.y;
   field.ball.velocity = newBall.velocity;
 }
+
+window.addEventListener('keydown', (e) => {
+  if(e.key == ' '){
+    if(document.fullscreen)
+      document.exitFullscreen();
+    else
+      document.body.requestFullscreen();
+  }
+})
