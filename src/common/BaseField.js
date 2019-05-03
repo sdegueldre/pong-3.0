@@ -1,8 +1,9 @@
 const Ball = require ('../common/BaseBall');
+const Paddle = require ('../common/BasePaddle');
 const BaseDoubleBall = require('./bonuses/BaseDoubleBall');
 
 module.exports  =  class BaseField {
-  constructor(players, options){
+  constructor(options){
     this.listeners = [];
     const defaults = {
       h: 600,
@@ -10,7 +11,16 @@ module.exports  =  class BaseField {
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);
-    this.players = players;
+    this.players = [
+      new Paddle({
+        x: 30,
+        y: this.h/2
+      }),
+      new Paddle({
+        x: this.w - 30,
+        y: this.h/2
+      })
+    ];
     this.bonuses = [];
     this.addBonus();
     this.balls = [new Ball(this.w/2, this.h/2)];
@@ -36,10 +46,13 @@ module.exports  =  class BaseField {
             let speed = 1.05*Math.hypot(ball.velocity.x, ball.velocity.y);
             ball.velocity.y = -speed*Math.sin(theta);
 
-            if(ball.velocity.x>0)
+            if(ball.velocity.x > 0){
               ball.velocity.x = -speed*Math.cos(theta);
-            else
+              this.players[1].activateBonuses(ball, this);
+            } else {
               ball.velocity.x = speed*Math.cos(theta);
+              this.players[0].activateBonuses(ball, this);
+            }
           }
         }
       }
@@ -62,14 +75,14 @@ module.exports  =  class BaseField {
     }
   }
 
-  collideBonus(){
+  collectBonuses(){
     for(let ball of this.balls){
       for(let bonus of this.bonuses){
         if(bonus.collide(ball) /*&& ball.lastHitPlayer*/){
           //ball.lastHitPlayer.addBonus(bonus);
           console.log('collected bonus!');
           this.removeBonus(bonus);
-          bonus.activate(this);
+          bonus.collect(ball, this);
           this.emit('bonusCollected');
         }
       }
@@ -83,7 +96,7 @@ module.exports  =  class BaseField {
     this.collideWall();
     this.collidePaddle();
     this.outOfField();
-    this.collideBonus();
+    this.collectBonuses();
   }
 
   on(type, callback){
@@ -98,6 +111,10 @@ module.exports  =  class BaseField {
 
   removeBall(ball){
     this.balls.splice(this.balls.indexOf(ball), 1);
+  }
+
+  addBall(ball){
+    this.balls.push(ball);
   }
 
   removeBonus(bonus){

@@ -1,4 +1,4 @@
-module.exports  =  class Paddle {
+module.exports  =  class BasePaddle {
   constructor(options){
     const defaults = {
       x:0,
@@ -6,6 +6,7 @@ module.exports  =  class Paddle {
       w: 20,
       h: 100,
       color: 0xFFFFFF,
+      bonuses: []
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);
@@ -25,5 +26,11 @@ module.exports  =  class Paddle {
     var dy=distY-this.h/2;
     return (dx*dx+dy*dy<=(ball.r*ball.r));
     // return ((ball.x - ball.radius < this.x) || (ball.x + ball.radius >this.x));
+  }
+
+  activateBonuses(ball, field){
+    let bonus;
+    if(bonus = this.bonuses.shift())
+      bonus.activate(ball, field);
   }
 }

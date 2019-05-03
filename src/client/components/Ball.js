@@ -14,6 +14,10 @@ module.exports = class Ball extends BaseBall {
     console.log("Not gonna remove ball until server says so.");
   }
 
+  addBall(ball){
+    console.log("Not adding ball on client");
+  }
+
   set x(value){
     this._x = value;
     if(this.graphics)

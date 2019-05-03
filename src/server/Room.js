@@ -1,5 +1,4 @@
 const Field = require ('../common/BaseField');
-const Paddle = require ('../common/BasePaddle');
 const uuid = require('uuid/v1');
 
 module.exports = class Room {
@@ -30,14 +29,10 @@ module.exports = class Room {
 
   startGame(){
     console.log('Enough players have joined the room: starting the game...');
-    for(let player of this.players){
-      player.paddle = new Paddle({
-        x: player.playerNumber == 1 ? 30 : 800-30,
-        y: 300
-      });
-      player.on('playerMove', (position) => this.movePlayer(player, position));
-    }
-    this.field = new Field(this.players.map(player => player.paddle));
+    this.field = new Field();
+    this.players[0].on('playerMove', (position) => this.movePlayer(0, position));
+    this.players[1].on('playerMove', (position) => this.movePlayer(1, position));
+
     this.broadcast('gameStarted', this.field.balls[0]);
     this.broadcast('bonusSpawned', this.field.bonuses[0]);
     setInterval(() => {
@@ -53,22 +48,20 @@ module.exports = class Room {
       this.field.addBonus();
       this.broadcast('bonusCollected', {
         bonuses: this.field.bonuses,
-        players: this.players.map(p => p.paddle)
+        players: this.field.players
       });
     })
     this.tick(this.field);
   }
 
-  movePlayer(player, position){
-    this.players[player.playerNumber-1].paddle.y = position.y;
-    for(let otherPlayer of this.players){
-      if(player == otherPlayer)
-        continue;
-      otherPlayer.emit('playerMove', {
-        playerNumber: player.playerNumber,
-        y: player.paddle.y
-      });
-    }
+  movePlayer(playerNumber, position){
+    this.field.players[playerNumber].y = position.y;
+    // Tell other player about the move
+    this.players[(playerNumber+1)%2].emit('playerMove', {
+      // Players are indexed from 1 on the client
+      playerNumber: playerNumber+1,
+      y: position.y
+    });
   }
 
   tick(object){
