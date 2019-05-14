@@ -1,0 +1,38 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  font-family: sans-serif;
+}
+
+.room-selector {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.room-share {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.game-container {
+  height: calc(100vh - 2px);
+  display: flex;
+  width: 133vh;
+  border: 1px solid white;
+}
+
+canvas {
+  height: 100%;
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}

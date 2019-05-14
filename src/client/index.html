@@ -4,21 +4,20 @@
     <meta charset="utf-8">
     <title></title>
   </head>
-  <style>
-  body {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    background-color: black;
-  }
-  canvas {
-    height: calc(100vh - 2px);
-    width: 133vh;
-    border: 1px solid white;
-  }
-  </style>
+  <link rel="stylesheet" href="style.css">
   <body>
-
+    <div class="room-selector">
+      <div class="room-buttons">
+        <button type="button" class="create-room">Create a room</button>
+        <button type="button" class="join-room hidden">Join a room</button>
+      </div>
+      <div class="room-share hidden">
+        <p>Created room Successfully!</p>
+        <button type="button" class="share-room">Copy link to clipboard</button>
+        <p class="hidden copy-text">Copied!</p>
+      </div>
+    </div>
+    <div class="game-container hidden"></div>
   </body>
   <script src="./pong3.js" charset="utf-8"></script>
 </html>

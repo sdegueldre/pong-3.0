@@ -33,7 +33,9 @@ module.exports = class Room {
     this.players[0].on('playerMove', (position) => this.movePlayer(0, position));
     this.players[1].on('playerMove', (position) => this.movePlayer(1, position));
 
-    this.broadcast('gameStarted', this.field.balls[0]);
+    this.players[0].emit('gameStarted', {controlledPlayer: 1, initialBall: this.field.balls[0]});
+    this.players[1].emit('gameStarted', {controlledPlayer: 2, initialBall: this.field.balls[0]});
+
     this.broadcast('bonusSpawned', this.field.bonuses[0]);
     setInterval(() => {
       this.broadcast('ballSync', this.field.balls);
