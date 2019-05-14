@@ -33,7 +33,7 @@ module.exports = class Game {
       this.field.setBonuses(bonusesPaddles.bonuses);
     });
 
-    window.addEventListener('keydown', this.fullscreenHandler);
+    window.addEventListener('keydown', this.fullscreenHandler.bind(this));
   }
 
   setBall(newBall){
@@ -86,7 +86,7 @@ module.exports = class Game {
       if(document.fullscreen)
         document.exitFullscreen();
       else
-        this.gameContainer.requestFullscreen();
+        document.body.requestFullscreen();
     }
   }
 
