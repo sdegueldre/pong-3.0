@@ -18,7 +18,6 @@ io.sockets.on('connection', (socket) => {
   console.log('client connected to socket:', socket.id);
   connections.push(socket);
 
-
   socket.on('connect', () => {
     console.log('Client reconnected:', socket.id);
   });

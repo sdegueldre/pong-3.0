@@ -41,7 +41,8 @@ module.exports  =  class BaseField {
     for(let ball of this.balls){
       for(let player of this.players){
         if(player.collide(ball)){
-          if((player == this.players[0] && ball.velocity.x < 0) || (player == this.players[1] && ball.velocity.x > 0)){
+          if((player == this.players[0] && ball.velocity.x < 0) ||
+             (player == this.players[1] && ball.velocity.x > 0)){
             let theta = Math.PI*(player.y-ball.y)/(4*player.h/2);
             let speed = 1.05*Math.hypot(ball.velocity.x, ball.velocity.y);
             ball.velocity.y = -speed*Math.sin(theta);
@@ -120,6 +121,7 @@ module.exports  =  class BaseField {
   }
 
   addBonus(){
-    this.bonuses.push(new BaseDoubleBall(this.w/3 + Math.random()*this.w/3, Math.random()*this.h));
+    this.bonuses.push(new BaseDoubleBall(this.w/3 + Math.random()*this.w/3,
+      Math.random()*this.h));
   }
 }

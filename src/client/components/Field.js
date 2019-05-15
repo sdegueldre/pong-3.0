@@ -40,7 +40,9 @@ module.exports = class Field extends BaseField {
     // Remove all balls from the stage
     this.balls.forEach(b => this.stage.removeChild(b.graphics));
     // Create new balls from the server data
-    this.balls = balls.map(ballData => new Ball(ballData.x, ballData.y, {velocity: ballData.velocity}));
+    this.balls = balls.map(ballData => new Ball(ballData.x, ballData.y, {
+      velocity: ballData.velocity
+    }));
     // Add the balls back to the stage
     this.balls.forEach(b => this.stage.addChild(b.graphics));
   }
