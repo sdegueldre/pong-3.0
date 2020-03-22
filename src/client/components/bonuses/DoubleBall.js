@@ -10,7 +10,7 @@ module.exports = class DoubleBall extends BaseDoubleBall {
     g.lineStyle(3, 0xFFFFFF, 1, 0.5);
     g.drawCircle(0, 0, this.radius);
     g.endFill();
-    g.beginFill(0XFF0000);
+    g.beginFill(0X00FFFF);
     g.lineStyle(0,0,1,1);
     g.drawCircle(-4*unit, 0, 2.5*unit);
     g.drawCircle(4*unit, 0, 2.5*unit);

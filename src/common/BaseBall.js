@@ -8,7 +8,7 @@ module.exports  =  class BaseBall {
         y: speed*Math.sin(theta)
       },
       radius: 18,
-      color: 0xFF0000
+      color: 0x00FFFF,
     }
     Object.assign(defaults, options);
     Object.assign(this, defaults);

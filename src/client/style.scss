@@ -5,6 +5,23 @@ body {
   background-color: black;
   color: white;
   font-family: sans-serif;
+  text-shadow: 0 0 2px aqua, 0 0 2px aqua, 0 0 2px aqua;
+
+  button {
+    border: 5px solid #fcfdfd;
+    color: white;
+    font-size: 4rem;
+    text-align: center;
+    border-radius: 100px;
+    text-transform: uppercase;
+    font-family: sans-serif;
+    transition: 0.25s;
+    padding: 1.5rem 2rem;
+    background-color: transparent;
+    text-shadow: 0 0 6px aqua, 0 0 6px aqua, 0 0 6px aqua;
+    box-shadow: 0 0 6px 3px aqua, inset 0 0 6px 3px aqua;
+    cursor: pointer;
+  }
 }
 
 .room-selector {
