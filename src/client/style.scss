@@ -8,18 +8,18 @@ body {
   text-shadow: 0 0 2px aqua, 0 0 2px aqua, 0 0 2px aqua;
 
   button {
-    border: 5px solid #fcfdfd;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    border: 2px solid #fcfdfd;
     color: white;
-    font-size: 4rem;
     text-align: center;
     border-radius: 100px;
     text-transform: uppercase;
     font-family: sans-serif;
     transition: 0.25s;
-    padding: 1.5rem 2rem;
     background-color: transparent;
-    text-shadow: 0 0 6px aqua, 0 0 6px aqua, 0 0 6px aqua;
-    box-shadow: 0 0 6px 3px aqua, inset 0 0 6px 3px aqua;
+    text-shadow: 0 0 6px aqua, 0 0 6px aqua;
+    box-shadow: 0 0 6px 1px aqua, inset 0 0 6px 1px aqua;
     cursor: pointer;
   }
 }
@@ -27,8 +27,27 @@ body {
 .room-selector {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.room-list-container {
+  text-align: center;
+  p, h1 {
+    margin: .25rem;
+  }
+}
+
+.room-list {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
 }
 
 .room-share {

@@ -10,10 +10,12 @@ module.exports = class RoomSelector {
     this.copyText = this.shareDiv.querySelector('.copy-text');
     this.shareButton = this.shareDiv.querySelector('button');
     this.gameRoot = document.querySelector('.game-container');
+    this.roomList = document.querySelector('.room-list');
     this.view = 'room-selector';
 
-    let joinButton = this.buttons.querySelector('.join-room');
-    let createButton = this.buttons.querySelector('.create-room');
+    const joinButton = this.buttons.querySelector('.join-room');
+    const createButton = this.buttons.querySelector('.create-room');
+
     createButton.addEventListener('click', this.createRoom.bind(this));
     joinButton.addEventListener('click', this.joinPrompt.bind(this));
 
@@ -37,11 +39,28 @@ module.exports = class RoomSelector {
     })
   }
 
+  updateRoomList(rooms) {
+    console.log('rooms: ', rooms);
+    this.roomList.textContent = '';
+    rooms.forEach(room => {
+      const row = document.createElement('div');
+      const join = document.createElement('a');
+      join.href = '#';
+      if (room.id !== this.id){
+        join.addEventListener('click', () => this.tryToJoin(room.id));
+      }
+      join.textContent = `${room.players}/${room.maxPlayers} ${room.name}`;
+      row.appendChild(join);
+      this.roomList.appendChild(row);
+    });
+  }
+
   createRoom(){
     this.socket.emit('createRoom');
-    this.socket.on('roomCreated', (id) => {
+    this.socket.on('roomCreated', id => {
       console.log('Successfully created room');
-      this.shareRoom.bind(this)(id);
+      this.id = id;
+      this.shareRoom(id);
     })
   }
 
@@ -88,6 +107,10 @@ module.exports = class RoomSelector {
       this.game = new Game(data.controlledPlayer, data.initialBall, this.socket);
       this.switchView();
     });
+
+    this.socket.on('roomList', this.updateRoomList.bind(this));
+
+    this.socket.emit('getRoomList');
 
     this.socket.on('roomClosed', () => {
       console.log('Room closed, back to room selector');
