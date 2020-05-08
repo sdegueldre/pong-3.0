@@ -19,8 +19,16 @@ module.exports = class Room {
     this.players.push(socket);
     socket.emit('joinedRoom');
 
-    if(this.players.length >= this.minPlayers)
+    if(this.players.length >= this.minPlayers && !this.field){
       this.startGame();
+    }
+
+    if(socket.playerNumber > this.maxPlayers) {
+      this.players[socket.playerNumber - 1].emit('gameStarted', {
+        controlledPlayer: 0,
+        initialBall: this.field.balls[0],
+      });
+    }
   }
 
   startGame(){
@@ -31,11 +39,11 @@ module.exports = class Room {
 
     this.players[0].emit('gameStarted', {
       controlledPlayer: 1,
-      initialBall: this.field.balls[0]
+      initialBall: this.field.balls[0],
     });
     this.players[1].emit('gameStarted', {
       controlledPlayer: 2,
-      initialBall: this.field.balls[0]
+      initialBall: this.field.balls[0],
     });
 
     this.broadcast('bonusSpawned', this.field.bonuses[0]);
@@ -61,11 +69,16 @@ module.exports = class Room {
   movePlayer(playerNumber, position){
     this.field.players[playerNumber].y = position.y;
     // Tell other player about the move
-    this.players[(playerNumber+1)%2].emit('playerMove', {
-      // Players are indexed from 1 on the client
-      playerNumber: playerNumber+1,
-      y: position.y
-    });
+    this.players.forEach((player, number) => {
+      if(number === playerNumber) {
+        return;
+      }
+      player.emit('playerMove', {
+        // Players are indexed from 1 on the client
+        playerNumber: playerNumber+1,
+        y: position.y
+      });
+    })
   }
 
   tick(object){
@@ -83,17 +96,20 @@ module.exports = class Room {
       player.emit(type, data);
   }
 
+  disconnect(socket){
+    const index = this.players.indexOf(socket);
+    if(index !== -1){
+      this.players.splice(index, 1);
+    }
+    return index;
+  }
+
   close(){
-    console.log('Closing room with id', this.id);
     this.broadcast('roomClosed');
     for(let ticker of this.tickers)
       clearInterval(ticker);
     for(let player of this.players){
       player.disconnect();
     }
-  }
-
-  isFull() {
-    return this.players.length >= this.maxPlayers;
   }
 }

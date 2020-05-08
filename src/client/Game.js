@@ -15,26 +15,28 @@ module.exports = class Game {
     this.gameContainer.appendChild(this.app.view);
 
     this.initPlayers();
-    this.player = controlledPlayer == 1 ? this.player1 : this.player2;
-    this.socket.on('playerMove', this.movePlayer.bind(this));
+    if(controlledPlayer) {
+      this.player = controlledPlayer == 1 ? this.player1 : this.player2;
+      this.mouseMoved = this.mouseMoved.bind(this);
+      window.addEventListener('mousemove', this.mouseMoved);
+    }
 
-    console.log('Game started');
-    this.mouseMoved = this.mouseMoved.bind(this)
-    window.addEventListener('mousemove', this.mouseMoved);
+    window.addEventListener('keydown', this.fullscreenHandler);
+    this.fullscreenHandler = this.fullscreenHandler.bind(this);
 
     this.field = new Field(this.app, [this.player1, this.player2], initialBall, {
       h: this.app.screen.height,
       w: this.app.screen.width
     });
+    console.log('Game started');
 
     this.socket.on('ballSync', this.field.setBalls.bind(this.field));
+    this.socket.on('playerMove', this.movePlayer.bind(this));
     this.socket.on('playerScored', this.playerScored.bind(this));
     this.socket.on('bonusSpawned', this.field.spawnBonus.bind(this.field));
     this.socket.on('bonusCollected', (bonusesPaddles) => {
       this.field.setBonuses(bonusesPaddles.bonuses);
     });
-    this.fullscreenHandler = this.fullscreenHandler.bind(this);
-    window.addEventListener('keydown', this.fullscreenHandler);
   }
 
   setBall(newBall){

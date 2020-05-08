@@ -46,10 +46,6 @@ io.sockets.on('connection', socket => {
       return socket.emit('roomNotFound', roomId);
     }
 
-    if(roomToJoin.isFull()) {
-      return socket.emit('roomFull');
-    }
-
     socket.room = roomToJoin;
     roomToJoin.join(socket);
     connections.forEach(socket => {
@@ -59,10 +55,14 @@ io.sockets.on('connection', socket => {
 
   socket.on('disconnect', () => {
     console.log('client disconnected:', socket.id);
-    if(socket.room){
-      console.log('Closing room: ', socket.room);
-      socket.room.close();
-      rooms.delete(socket.room.id);
+    const room = socket.room;
+    if(room){
+      const playerNumber = room.disconnect(socket);
+      if([0,1].includes(playerNumber)) {
+        console.log('Closing room: ', socket.room.id);
+        socket.room.close();
+        rooms.delete(socket.room.id);
+      }
     }
     connections.delete(socket);
     connections.forEach(socket => {
