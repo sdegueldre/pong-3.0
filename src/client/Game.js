@@ -19,7 +19,8 @@ module.exports = class Game {
     this.socket.on('playerMove', this.movePlayer.bind(this));
 
     console.log('Game started');
-    window.addEventListener('mousemove', this.mouseMoved.bind(this));
+    this.mouseMoved = this.mouseMoved.bind(this)
+    window.addEventListener('mousemove', this.mouseMoved);
 
     this.field = new Field(this.app, [this.player1, this.player2], initialBall, {
       h: this.app.screen.height,
@@ -32,8 +33,8 @@ module.exports = class Game {
     this.socket.on('bonusCollected', (bonusesPaddles) => {
       this.field.setBonuses(bonusesPaddles.bonuses);
     });
-
-    window.addEventListener('keydown', this.fullscreenHandler.bind(this));
+    this.fullscreenHandler = this.fullscreenHandler.bind(this);
+    window.addEventListener('keydown', this.fullscreenHandler);
   }
 
   setBall(newBall){
@@ -92,5 +93,7 @@ module.exports = class Game {
 
   destroy(){
     this.app.destroy(true, true);
+    window.removeEventListener('mousemove', this.mouseMoved);
+    window.removeEventListener('keydown', this.fullscreenHandler);
   }
 }

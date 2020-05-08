@@ -115,7 +115,7 @@ module.exports = class RoomSelector {
     this.socket.on('roomClosed', () => {
       console.log('Room closed, back to room selector');
       this.switchView();
-      this.game.destroy;
+      this.game.destroy();
       this.game = null;
       this.gameRoot.innerHTML = '';
     });
