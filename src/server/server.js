@@ -43,9 +43,13 @@ io.sockets.on('connection', socket => {
   socket.on('joinRoom', (roomId) => {
     const roomToJoin = rooms.get(roomId);
     if(!roomToJoin){
-      socket.emit('roomNotFound', roomId);
-      return;
+      return socket.emit('roomNotFound', roomId);
     }
+
+    if(roomToJoin.isFull()) {
+      return socket.emit('roomFull');
+    }
+
     socket.room = roomToJoin;
     roomToJoin.join(socket);
     connections.forEach(socket => {
@@ -56,6 +60,7 @@ io.sockets.on('connection', socket => {
   socket.on('disconnect', () => {
     console.log('client disconnected:', socket.id);
     if(socket.room){
+      console.log('Closing room: ', socket.room);
       socket.room.close();
       rooms.delete(socket.room.id);
     }

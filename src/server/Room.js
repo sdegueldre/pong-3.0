@@ -15,10 +15,6 @@ module.exports = class Room {
   }
 
   join(socket){
-    if(this.players.length >= this.maxPlayers){
-      socket.emit('failedToJoin');
-      return;
-    }
     socket.playerNumber = this.players.length + 1;
     this.players.push(socket);
     socket.emit('joinedRoom');
@@ -95,5 +91,9 @@ module.exports = class Room {
     for(let player of this.players){
       player.disconnect();
     }
+  }
+
+  isFull() {
+    return this.players.length >= this.maxPlayers;
   }
 }
