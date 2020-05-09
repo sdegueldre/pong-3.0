@@ -3,12 +3,11 @@ const socketIO = require('socket.io');
 const Room = require('./Room');
 
 const app = express();
-const server = app.listen(process.env.PORT || 3000, listen);
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => {
+  console.log('Server listening: on http://localhost:' + port);
+});
 app.use(express.static('dist'));
-
-function listen(){
-  console.log('Server listening:', server.address());
-};
 
 const io = socketIO(server, {origins: '*:*'});
 const connections = new Set();

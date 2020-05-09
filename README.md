@@ -1,18 +1,21 @@
 # Pong-3.0
-
-Welcome to this new and fabulous project to create a new version of the pong game.
+Pong 3.0 is colorful and fast-paced approach to the classic pong game. Play online with your friends and overwhelm them with your superior skills and balls!
 
 ### Setting up
- 
  * Clone the repo: `git clone ...`
  * Install the dependencies: `npm install`
 
 ### Launch
+ * `npm run dev` will start a process to watch for changes and rebuild the client automatically.
+It will also start the server on port 3000. You can now access the game at http://localhost:3000
 
- * Use `npm run dev` to start the client application
- * Use `npm run server` to start the server
- * Point your browser at http://localhost:3000
-> Parcel will tell you that it's serving the files on port 1234: that won't work as application tries to connect to the websocket on the same port as the page, so you need to go to the page served by the server on port 3000 (or whatever port you configure in your environment, eg: `PORT=8080 npm run server`)
+* At the moment, the server does not restart automatically when you change files, you'll have top restart it manually.
+
+
+##### 💡 Tip
+> You can change the port on which the server will listen by setting the PORT environment variable
+>
+> e.g.: `PORT=42069 npm start`
 
 #### The technologies used for this project are : 
  * [Parcel](https://parceljs.org/) for bundling and building
