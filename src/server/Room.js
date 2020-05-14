@@ -6,11 +6,12 @@ module.exports = class Room {
     this.owner = socket;
     this.owner.playerNumber = 1;
     this.id = uuid();
-    this.owner.emit('roomCreated', this.id);
     this.players = [this.owner];
     this.maxPlayers = 2;
     this.minPlayers = 2;
     this.tickers = [];
+    socket.emit('joinedRoom', this.id);
+    socket.emit('roomCreated', this.id);
     console.log('Created room with id', this.id);
   }
 
@@ -101,15 +102,14 @@ module.exports = class Room {
     if(index !== -1){
       this.players.splice(index, 1);
     }
+    socket.emit('roomClosed');
     return index;
   }
 
   close(){
     this.broadcast('roomClosed');
-    for(let ticker of this.tickers)
+    for(let ticker of this.tickers){
       clearInterval(ticker);
-    for(let player of this.players){
-      player.disconnect();
     }
   }
 }
