@@ -1,125 +1,55 @@
-const io = require('socket.io-client/dist/socket.io');
-const Game = require('./Game.js');
+import React, {useState, useEffect} from 'react';
 
-// params: element = the DOM node to inject the room selector into
-module.exports = class RoomSelector {
-  constructor(element){
-    this.root = element;
-    this.buttons = element.querySelector('.room-buttons');
-    this.shareDiv = element.querySelector('.room-share');
-    this.copyText = this.shareDiv.querySelector('.copy-text');
-    this.shareButton = this.shareDiv.querySelector('button');
-    this.gameRoot = document.querySelector('.game-container');
-    this.roomList = document.querySelector('.room-list');
-    this.view = 'room-selector';
+export default ({socket, joinRoom, className}) => {
+  const [rooms, setRooms] = useState([]);
+  const [currentRoomId, setCurrentRoomId] = useState(null);
+  const [shareURL, setShareURL] = useState('');
+  console.log(rooms, currentRoomId);
 
-    const joinButton = this.buttons.querySelector('.join-room');
-    const createButton = this.buttons.querySelector('.create-room');
-
-    createButton.addEventListener('click', this.createRoom.bind(this));
-    joinButton.addEventListener('click', this.joinPrompt.bind(this));
-
-    this.connect();
-    this.socket.on('disconnect', this.connect.bind(this));
-  }
-
-  tryToJoin(roomId){
-    this.socket.emit('joinRoom', roomId);
-
-    this.socket.on('noSuchRoom', () => {
-      console.log('Room doesn\'t exist');
+  useEffect(() => {
+    socket.on('roomList', rooms => {
+      console.log('got room list:', rooms);
+      setRooms(rooms)
     });
+    socket.emit('getRoomList');
+  }, [socket])
 
-    this.socket.on('roomFull', () => {
-      console.log('Room is full');
-    });
-
-    this.socket.on('joinedRoom', () => {
-      console.log('Successfully joined room '+roomId);
-    })
-  }
-
-  updateRoomList(rooms) {
-    console.log('rooms: ', rooms);
-    this.roomList.textContent = '';
-    rooms.forEach(room => {
-      const row = document.createElement('div');
-      const join = document.createElement('a');
-      join.href = '#';
-      if (room.id !== this.id){
-        join.addEventListener('click', () => this.tryToJoin(room.id));
-      }
-      join.textContent = `${room.players}/${room.maxPlayers} ${room.name}`;
-      row.appendChild(join);
-      this.roomList.appendChild(row);
-    });
-  }
-
-  createRoom(){
-    this.socket.emit('createRoom');
-    this.socket.on('roomCreated', id => {
-      console.log('Successfully created room');
-      this.id = id;
-      this.shareRoom(id);
-    })
-  }
-
-  switchView(){
-    if(this.view == 'room-selector'){
-      show(this.gameRoot);
-      hide(this.root);
-      hide(this.copyText);
-      show(this.buttons);
-      hide(this.shareDiv);
-      this.view = 'game-container';
-    } else {
-      show(this.root)
-      hide(this.gameRoot);
-      this.view = 'room-selector';
-    }
-  }
-
-  shareRoom(id){
-    hide(this.buttons);
-    show(this.shareDiv);
+  const shareRoom = () => {
     let url = new URL(window.location);
-    url.hash = '#'+id;
-    this.shareButton.addEventListener('click', () => {
-      copyToClipboard(url.href);
-      show(this.copyText);
+    url.hash = '#' + currentRoomId;
+    setShareURL(url.href);
+    copyToClipboard(url.href);
+  }
+
+  const createRoom = () => {
+    socket.emit('createRoom');
+    socket.once('roomCreated', id => {
+      console.log('Successfully created room');
+      setCurrentRoomId(id);
     });
   }
 
-  joinPrompt(){
-    console.log('Join dialog.');
-  }
-
-  connect(){
-    this.socket = io.connect();
-
-    // Detect roomId in url for quick join
-    let roomId = new URL(window.location).hash.slice(1);
-    if(roomId) {
-      this.tryToJoin(roomId);
-    }
-
-    this.socket.on('gameStarted', data => {
-      this.game = new Game(data.controlledPlayer, data.initialBall, this.socket);
-      this.switchView();
-    });
-
-    this.socket.on('roomList', this.updateRoomList.bind(this));
-
-    this.socket.emit('getRoomList');
-
-    this.socket.on('roomClosed', () => {
-      console.log('Room closed, back to room selector');
-      this.switchView();
-      this.game.destroy();
-      this.game = null;
-      this.gameRoot.innerHTML = '';
-    });
-  }
+  return <div className={`${className} room-selector`}>
+    <div className="room-list-container">
+      <h1>Public rooms</h1>
+      <p>(click to join)</p>
+    <div className="room-list">
+    {rooms.map(room => <div key={room.id}>
+      <span onClick={room.id !== currentRoomId ? (() => joinRoom(room.id)) : () => null}>
+        {`${room.players}/${room.maxPlayers} ${room.name}`}
+      </span>
+    </div>)}
+    </div>
+    </div>
+      <div className="room-buttons">
+        <button type="button" className="create-room" onClick={createRoom}>Create a room</button>
+      </div>
+    <div className={`room-share${currentRoomId ? '' : ' hidden'}`}>
+      <p>Created room Successfully!</p>
+      <button type="button" className="share-room" onClick={shareRoom}>Copy link to clipboard</button>
+      <p className={`copy-text${shareURL ? "" : " hidden"}`}>Copied!</p>
+    </div>
+  </div>
 }
 
 function copyToClipboard(str){
@@ -130,11 +60,3 @@ function copyToClipboard(str){
   document.execCommand('copy');
   document.body.removeChild(el);
 };
-
-function hide(element){
-  element.classList.add('hidden');
-}
-
-function show(element){
-  element.classList.remove('hidden');
-}

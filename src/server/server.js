@@ -14,6 +14,7 @@ const connections = new Set();
 const rooms = new Map();
 
 function sendRoomList(socket){
+  console.log('sending roomlist to client: ', socket.id);
   socket.emit('roomList', [...rooms.values()].map(r => ({
     id: r.id,
     name: r.id,
@@ -31,6 +32,13 @@ io.sockets.on('connection', socket => {
   });
 
   socket.on('createRoom', () => {
+    if(socket.room) {
+      socket.room.disconnect(socket);
+      if (socket.room.players.length === 0) {
+        socket.room.close();
+        rooms.delete(socket.room.id);
+      }
+    }
     const room = new Room(socket)
     rooms.set(room.id, room);
     socket.room = room;
@@ -64,6 +72,7 @@ io.sockets.on('connection', socket => {
       }
     }
     connections.delete(socket);
+    console.log('sending room list to clients:', [...connections].map(s => s.id));
     connections.forEach(socket => {
       sendRoomList(socket);
     });
