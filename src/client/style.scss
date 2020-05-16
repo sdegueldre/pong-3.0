@@ -8,7 +8,6 @@ body {
   text-shadow: 0 0 2px aqua, 0 0 2px aqua, 0 0 2px aqua;
 
   button {
-    margin-top: 2rem;
     font-size: 1.5rem;
     border: 2px solid #fcfdfd;
     color: white;
@@ -36,6 +35,25 @@ body {
   text-align: center;
   p, h1 {
     margin: .25rem;
+  }
+}
+
+.create-room {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  
+  input {
+    color: white;
+    background-color: transparent;
+    border: 1px solid white;
+    padding: .5rem;
+    border-radius: .5rem;
+    box-shadow: 0 0 6px 1px aqua, inset 0 0 6px 1px aqua;
+  }
+  
+  button {
+    margin-top: .5rem;
   }
 }
 

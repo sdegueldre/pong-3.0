@@ -17,7 +17,7 @@ function sendRoomList(socket){
   console.log('sending roomlist to client: ', socket.id);
   socket.emit('roomList', [...rooms.values()].map(r => ({
     id: r.id,
-    name: r.id,
+    name: r.name,
     players: r.players.length,
     maxPlayers: r.maxPlayers,
   })));
@@ -31,7 +31,7 @@ io.sockets.on('connection', socket => {
     console.log('Client reconnected:', socket.id);
   });
 
-  socket.on('createRoom', () => {
+  socket.on('createRoom', ({name}) => {
     if(socket.room) {
       socket.room.disconnect(socket);
       if (socket.room.players.length === 0) {
@@ -39,7 +39,7 @@ io.sockets.on('connection', socket => {
         rooms.delete(socket.room.id);
       }
     }
-    const room = new Room(socket)
+    const room = new Room({socket, name});
     rooms.set(room.id, room);
     socket.room = room;
     connections.forEach(socket => {
@@ -51,6 +51,13 @@ io.sockets.on('connection', socket => {
     const roomToJoin = rooms.get(roomId);
     if(!roomToJoin){
       return socket.emit('roomNotFound', roomId);
+    }
+    if(socket.room) {
+      socket.room.disconnect(socket);
+      if (socket.room.players.length === 0) {
+        socket.room.close();
+        rooms.delete(socket.room.id);
+      }
     }
 
     socket.room = roomToJoin;

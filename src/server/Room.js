@@ -2,8 +2,9 @@ const Field = require ('../common/BaseField');
 const uuid = require('uuid/v1');
 
 module.exports = class Room {
-  constructor(socket){
+  constructor({socket, name}){
     this.owner = socket;
+    this.name = name;
     this.owner.playerNumber = 1;
     this.id = uuid();
     this.players = [this.owner];

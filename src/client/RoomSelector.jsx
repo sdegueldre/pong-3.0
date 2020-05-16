@@ -4,6 +4,7 @@ export default ({socket, joinRoom, className}) => {
   const [rooms, setRooms] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [shareURL, setShareURL] = useState('');
+  const [roomName, setRoomName] = useState('');
   console.log(rooms, currentRoomId);
 
   useEffect(() => {
@@ -22,7 +23,11 @@ export default ({socket, joinRoom, className}) => {
   }
 
   const createRoom = () => {
-    socket.emit('createRoom');
+    if(!roomName) {
+      return;
+    }
+    setRoomName('');
+    socket.emit('createRoom', {name: roomName});
     socket.once('roomCreated', id => {
       console.log('Successfully created room');
       setCurrentRoomId(id);
@@ -35,14 +40,18 @@ export default ({socket, joinRoom, className}) => {
       <p>(click to join)</p>
     <div className="room-list">
     {rooms.map(room => <div key={room.id}>
-      <span onClick={room.id !== currentRoomId ? (() => joinRoom(room.id)) : () => null}>
-        {`${room.players}/${room.maxPlayers} ${room.name}`}
+      <span onClick={room.id !== currentRoomId ? (() => {
+        joinRoom(room.id);
+        setCurrentRoomId(null);
+      }) : () => null}>
+        {`${room.players}/${room.maxPlayers} ${room.name}${room.id === currentRoomId ? ' ◄' : ''}`}
       </span>
     </div>)}
     </div>
     </div>
-      <div className="room-buttons">
-        <button type="button" className="create-room" onClick={createRoom}>Create a room</button>
+      <div className={`create-room`}>
+        <input type="text" value={roomName} onChange={ev => setRoomName(ev.target.value)} placeholder="Room name..." />
+        <button type="button" onClick={createRoom}>Create a room</button>
       </div>
     <div className={`room-share${currentRoomId ? '' : ' hidden'}`}>
       <p>Created room Successfully!</p>
