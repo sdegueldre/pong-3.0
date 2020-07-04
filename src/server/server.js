@@ -2,6 +2,20 @@ const express = require('express');
 const socketIO = require('socket.io');
 const Room = require('./Room');
 
+if (process.argv.includes('--watch')) {
+  const { spawn } = require('child_process');
+  const watcher = spawn('npm', ['run', 'watch']);
+  watcher.stdout.on('data', data => console.log(`${data}`));
+  watcher.stderr.on('data', data => console.error(`E: ${data}`));
+  watcher.on('error', error => {
+    console.error(error);
+    process.exit(1);
+  })
+  watcher.on('exit', code => {
+    console.log('Watcher exited with code', code);
+  });
+}
+
 const app = express();
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {

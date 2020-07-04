@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "(parcel watch src/client/index.html) & npm start",
+    "dev": "npm start -- --watch",
     "build": "parcel build src/client/index.html --public-url ./",
-    "start": "node src/server/server.js"
+    "start": "node src/server/server.js",
+    "watch": "parcel watch src/client/index.html"
   },
   "repository": {
     "type": "git",
