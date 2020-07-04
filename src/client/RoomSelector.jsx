@@ -5,7 +5,6 @@ export default ({socket, joinRoom, className}) => {
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [shareURL, setShareURL] = useState('');
   const [roomName, setRoomName] = useState('');
-  console.log(rooms, currentRoomId);
 
   useEffect(() => {
     socket.on('roomList', rooms => {

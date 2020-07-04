@@ -95,6 +95,7 @@ module.exports = class Game {
 
   destroy(){
     this.app.destroy(true, true);
+    ['ballSync', 'playerMove', 'playerScored', 'bonusSpawned', 'bonusCollected'].forEach(type => this.socket.off(type));
     window.removeEventListener('mousemove', this.mouseMoved);
     window.removeEventListener('keydown', this.fullscreenHandler);
   }
