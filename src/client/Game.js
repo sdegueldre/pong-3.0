@@ -4,7 +4,7 @@ const Field = require('./components/Field');
 const Ball = require('./components/Ball');
 
 module.exports = class Game {
-  constructor(controlledPlayer, initialBall, socket){
+  constructor(controlledPlayer, initialBall, socket, players){
     this.socket = socket;
     this.gameContainer = document.querySelector('.game-container');
     this.app = new PIXI.Application({
@@ -14,7 +14,7 @@ module.exports = class Game {
     });
     this.gameContainer.appendChild(this.app.view);
 
-    this.initPlayers();
+    this.initPlayers(players);
     if(controlledPlayer) {
       this.player = controlledPlayer == 1 ? this.player1 : this.player2;
       this.mouseMoved = this.mouseMoved.bind(this);
@@ -45,16 +45,18 @@ module.exports = class Game {
     field.ball.velocity = newBall.velocity;
   }
 
-  initPlayers(){
+  initPlayers(names){
     this.player1 = new Paddle({
       x: 30,
       y: this.app.screen.height/2
     });
+    this.player1.name = names[0];
 
     this.player2 = new Paddle({
       x: this.app.screen.width-30,
       y: this.app.screen.height/2
     });
+    this.player2.name = names[1];
 
     this.player1.interactive = true;
     this.player2.interactive = true;

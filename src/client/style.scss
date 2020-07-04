@@ -7,7 +7,7 @@ body {
   font-family: sans-serif;
   text-shadow: 0 0 2px aqua, 0 0 2px aqua, 0 0 2px aqua;
 
-  button {
+  button, input[type="submit"] {
     font-size: 1.5rem;
     border: 2px solid #fcfdfd;
     color: white;
@@ -23,7 +23,7 @@ body {
   }
 }
 
-.room-selector {
+.room-selector, .username-selector {
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -42,19 +42,26 @@ body {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  
-  input {
-    color: white;
-    background-color: transparent;
-    border: 1px solid white;
-    padding: .5rem;
-    border-radius: .5rem;
-    box-shadow: 0 0 6px 1px aqua, inset 0 0 6px 1px aqua;
-  }
-  
+
   button {
     margin-top: .5rem;
   }
+}
+
+
+input {
+  color: white;
+  background-color: transparent;
+  border: 1px solid white;
+  padding: .5rem;
+  border-radius: .5rem;
+  box-shadow: 0 0 6px 1px aqua, inset 0 0 6px 1px aqua;
+}
+
+::placeholder {
+  color: white;
+  opacity: .7;
+  text-shadow: 0 0 6px aqua, 0 0 6px aqua;
 }
 
 .room-list {
@@ -88,4 +95,17 @@ canvas {
 
 .hidden {
   display: none;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.mr {
+  margin-right: .5rem;
+}
+
+.ml {
+ margin-left: .5rem;
 }

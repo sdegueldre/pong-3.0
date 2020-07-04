@@ -5,6 +5,7 @@ const DoubleBall = require('./bonuses/DoubleBall');
 
 module.exports = class Field extends BaseField {
   constructor(app, players, ballData, options){
+    console.log('players', players);
     super(players, options);
     this.graphics = new PIXI.Graphics();
     for(let i = 0; i*50 < this.h; i++){
@@ -12,10 +13,17 @@ module.exports = class Field extends BaseField {
     	this.graphics.drawRect(this.w/2 - 2.5, 50*i + 10, 5, 30);
       this.graphics.endFill();
     }
-    this.scoreText = new PIXI.Text('', {
+    const textSettings = {
       fontSize: 28,
       fill: 0xffffff,
-    });
+      strokeThickness: 4,
+    };
+    this.scoreText = new PIXI.Text('', textSettings);
+    const playerName1 = new PIXI.Text(players[0].name, textSettings);
+    Object.assign(playerName1, {x: 10, y: 5});
+    const playerName2 = new PIXI.Text(players[1].name, textSettings);
+    Object.assign(playerName2, {x: this.w - playerName2.width - 10, y: 5});
+
     this.updateScore();
     this.stage = app.stage;
     app.ticker.add(this.update.bind(this));
@@ -25,8 +33,10 @@ module.exports = class Field extends BaseField {
       this.graphics,
       players[0].graphics,
       players[1].graphics,
+      this.balls[0].graphics,
       this.scoreText,
-      this.balls[0].graphics
+      playerName1,
+      playerName2,
     );
   }
 

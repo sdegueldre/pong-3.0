@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 
-export default ({socket, joinRoom, className}) => {
+export default ({socket, joinRoom, className, userName}) => {
   const [rooms, setRooms] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [shareURL, setShareURL] = useState('');
@@ -48,14 +48,9 @@ export default ({socket, joinRoom, className}) => {
     </div>)}
     </div>
     </div>
-      <div className={`create-room`}>
-        <input type="text" value={roomName} onChange={ev => setRoomName(ev.target.value)} placeholder="Room name..." />
-        <button type="button" onClick={createRoom}>Create a room</button>
-      </div>
-    <div className={`room-share${currentRoomId ? '' : ' hidden'}`}>
-      <p>Created room Successfully!</p>
-      <button type="button" className="share-room" onClick={shareRoom}>Copy link to clipboard</button>
-      <p className={`copy-text${shareURL ? "" : " hidden"}`}>Copied!</p>
+    <div className={`create-room`}>
+      <input type="text" value={roomName} onChange={ev => setRoomName(ev.target.value)} placeholder="Room name..." />
+      <button type="button" onClick={createRoom}>Create a room</button>
     </div>
   </div>
 }

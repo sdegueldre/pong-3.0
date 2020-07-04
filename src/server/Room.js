@@ -39,13 +39,17 @@ module.exports = class Room {
     this.players[0].on('playerMove', (position) => this.movePlayer(0, position));
     this.players[1].on('playerMove', (position) => this.movePlayer(1, position));
 
+    const players = this.players.map(socket => socket.userName);
+    console.log('player names:', players);
     this.players[0].emit('gameStarted', {
       controlledPlayer: 1,
       initialBall: this.field.balls[0],
+      players,
     });
     this.players[1].emit('gameStarted', {
       controlledPlayer: 2,
       initialBall: this.field.balls[0],
+      players,
     });
 
     this.broadcast('bonusSpawned', this.field.bonuses[0]);

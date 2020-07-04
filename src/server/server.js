@@ -45,6 +45,11 @@ io.sockets.on('connection', socket => {
     console.log('Client reconnected:', socket.id);
   });
 
+  socket.on('setUserName', name => {
+    console.log('setting userName to', name);
+    socket.userName = name;
+  });
+
   socket.on('createRoom', ({name}) => {
     if(socket.room) {
       socket.room.disconnect(socket);

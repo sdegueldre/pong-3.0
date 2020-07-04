@@ -9,6 +9,8 @@ const App = () => {
   const gameObj = useRef({game, setGame});
   const [socket, setSocket] = useState(null);
   const [joinRoom, setJoinRoom] = useState(() => null);
+  const [userName, setUserName] = useState('');
+  const userNameInput = useRef(null);
 
   gameObj.current.game = game;
   gameObj.current.setGame = setGame;
@@ -20,9 +22,9 @@ const App = () => {
 
     socket.on('joinedRoom', () => {
       console.log('joined room');
-      const startGame = data => {
+      const startGame = ({controlledPlayer, initialBall, players}) => {
         console.log('game started');
-        gameObj.current.setGame(new Game(data.controlledPlayer, data.initialBall, socket));
+        gameObj.current.setGame(new Game(controlledPlayer, initialBall, socket, players));
       };
       socket.once('gameStarted', startGame);
       socket.once('roomClosed', () => {
@@ -43,8 +45,24 @@ const App = () => {
     setJoinRoom(() => joinRoom);
   }, []);
 
+  const userNameSubmit = ev => {
+    ev.preventDefault();
+    const userName = userNameInput.current.value;
+    setUserName(userName);
+    socket.emit('setUserName', userName);
+  }
+
   return <>
-    {socket && <RoomSelector className={game ? "hidden" : ""} socket={socket} joinRoom={joinRoom}/>}
+    {socket && (
+      !userName ? <div className="username-selector">
+        <form className="d-flex" onSubmit={userNameSubmit} style={{fontSize: '1rem'}}>
+          <input placeholder="Enter a nickname..." ref={userNameInput} />
+          <input type="submit" className="ml" value="Go"/>
+        </form>
+      </div>
+      :
+      <RoomSelector className={game ? "hidden" : ""} socket={socket} joinRoom={joinRoom} userName={userName}/>
+    )}
     <div className={`game-container${game ? "" : " hidden"}`}></div>
   </>
 }
