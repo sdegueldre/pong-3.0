@@ -29,6 +29,7 @@ module.exports = class Room {
       this.players[socket.playerNumber - 1].emit('gameStarted', {
         controlledPlayer: 0,
         initialBall: this.field.balls[0],
+        players: this.players.slice(0, 2).map(socket => socket.userName),
       });
     }
   }
