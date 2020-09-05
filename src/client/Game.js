@@ -1,7 +1,6 @@
 const PIXI = require('pixi.js');
 const Paddle = require('./components/Paddle');
 const Field = require('./components/Field');
-const Ball = require('./components/Ball');
 
 module.exports = class Game {
   constructor(controlledPlayer, initialBall, socket, players){
@@ -10,13 +9,13 @@ module.exports = class Game {
     this.app = new PIXI.Application({
       antialias: true,
       width: 1440,
-      height: 1080
+      height: 1080,
     });
     this.gameContainer.appendChild(this.app.view);
 
     this.initPlayers(players);
-    if(controlledPlayer) {
-      this.player = controlledPlayer == 1 ? this.player1 : this.player2;
+    if(controlledPlayer){
+      this.player = controlledPlayer === 1 ? this.player1 : this.player2;
       this.mouseMoved = this.mouseMoved.bind(this);
       window.addEventListener('mousemove', this.mouseMoved);
     }
@@ -26,9 +25,9 @@ module.exports = class Game {
 
     this.field = new Field(this.app, [this.player1, this.player2], initialBall, {
       h: this.app.screen.height,
-      w: this.app.screen.width
+      w: this.app.screen.width,
     });
-    console.log('Game started');
+    console.debug('Game started');
 
     this.socket.on('ballSync', this.field.setBalls.bind(this.field));
     this.socket.on('playerMove', this.movePlayer.bind(this));
@@ -40,21 +39,21 @@ module.exports = class Game {
   }
 
   setBall(newBall){
-    field.ball.x = newBall.x;
-    field.ball.y = newBall.y;
-    field.ball.velocity = newBall.velocity;
+    this.field.ball.x = newBall.x;
+    this.field.ball.y = newBall.y;
+    this.field.ball.velocity = newBall.velocity;
   }
 
   initPlayers(names){
     this.player1 = new Paddle({
       x: 30,
-      y: this.app.screen.height/2
+      y: this.app.screen.height / 2,
     });
     this.player1.name = names[0];
 
     this.player2 = new Paddle({
-      x: this.app.screen.width-30,
-      y: this.app.screen.height/2
+      x: this.app.screen.width - 30,
+      y: this.app.screen.height / 2,
     });
     this.player2.name = names[1];
 
@@ -74,9 +73,10 @@ module.exports = class Game {
   }
 
   mouseMoved(e){
-    if(!this.canvasHeight)
+    if(!this.canvasHeight){
       this.canvasHeight = document.querySelector('canvas').clientHeight;
-    this.player.y = e.layerY*1080/this.canvasHeight;
+    }
+    this.player.y = e.layerY * 1080 / this.canvasHeight;
     this.socket.emit('playerMove', {y: this.player.y});
   }
 
@@ -87,11 +87,12 @@ module.exports = class Game {
   }
 
   fullscreenHandler(e){
-    if(e.key == ' '){
-      if(document.fullscreen)
+    if(e.key === ' '){
+      if(document.fullscreen){
         document.exitFullscreen();
-      else
+      } else {
         document.body.requestFullscreen();
+      }
     }
   }
 
@@ -101,4 +102,4 @@ module.exports = class Game {
     window.removeEventListener('mousemove', this.mouseMoved);
     window.removeEventListener('keydown', this.fullscreenHandler);
   }
-}
+};

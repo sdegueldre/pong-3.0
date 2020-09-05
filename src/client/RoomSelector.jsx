@@ -1,37 +1,36 @@
 import React, {useState, useEffect} from 'react';
 
-export default ({socket, joinRoom, className, userName}) => {
+const RoomSelector = ({socket, joinRoom, className, userName}) => {
   const [rooms, setRooms] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(null);
-  const [shareURL, setShareURL] = useState('');
   const [roomName, setRoomName] = useState('');
 
   useEffect(() => {
     socket.on('roomList', rooms => {
-      console.log('got room list:', rooms);
-      setRooms(rooms)
+      console.debug('got room list:', rooms);
+      setRooms(rooms);
     });
     socket.emit('getRoomList');
-  }, [socket])
+  }, [socket]);
 
+  // eslint-disable-next-line no-unused-vars
   const shareRoom = () => {
-    let url = new URL(window.location);
+    const url = new URL(window.location);
     url.hash = '#' + currentRoomId;
-    setShareURL(url.href);
     copyToClipboard(url.href);
-  }
+  };
 
   const createRoom = () => {
-    if(!roomName) {
+    if(!roomName){
       return;
     }
     setRoomName('');
     socket.emit('createRoom', {name: roomName});
     socket.once('roomCreated', id => {
-      console.log('Successfully created room');
+      console.debug('Successfully created room');
       setCurrentRoomId(id);
     });
-  }
+  };
 
   return <div className={`${className} room-selector`}>
     <div className="room-list-container">
@@ -52,8 +51,8 @@ export default ({socket, joinRoom, className, userName}) => {
       <input type="text" value={roomName} onChange={ev => setRoomName(ev.target.value)} placeholder="Room name..." />
       <button type="button" onClick={createRoom}>Create a room</button>
     </div>
-  </div>
-}
+  </div>;
+};
 
 function copyToClipboard(str){
   const el = document.createElement('textarea');
@@ -62,4 +61,6 @@ function copyToClipboard(str){
   el.select();
   document.execCommand('copy');
   document.body.removeChild(el);
-};
+}
+
+export default RoomSelector;

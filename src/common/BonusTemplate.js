@@ -1,15 +1,14 @@
-
-module.exports = class BonusTemplate{
+module.exports = class BonusTemplate {
   constructor(){
     this.radius = 50;
     this.player = null;
   }
 
   collide(ball){
-    return Math.hypot(this.x - ball.x, this.y - ball.y)<= this.radius + ball.radius;
+    return Math.hypot(this.x - ball.x, this.y - ball.y) <= this.radius + ball.radius;
   }
 
   activate(){
-    console.log('BonusTemplate activate function');
+    console.debug('BonusTemplate activate function');
   }
-}
+};

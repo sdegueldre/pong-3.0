@@ -21,21 +21,21 @@ const App = () => {
     };
 
     socket.on('joinedRoom', () => {
-      console.log('joined room');
+      console.debug('joined room');
       const startGame = ({controlledPlayer, initialBall, players}) => {
-        console.log('game started');
+        console.debug('game started');
         gameObj.current.setGame(new Game(controlledPlayer, initialBall, socket, players));
       };
       socket.once('gameStarted', startGame);
       socket.once('roomClosed', () => {
-        console.log('Room closed, back to room selector');
+        console.debug('Room closed, back to room selector');
         socket.off('gameStarted', startGame);
         if(gameObj.current.game){
           gameObj.current.game.destroy();
           gameObj.current.setGame(null);
         }
       });
-    })
+    });
 
     const roomId = new URL(window.location).hash.slice(1);
     if(roomId){
@@ -50,7 +50,7 @@ const App = () => {
     const userName = userNameInput.current.value;
     setUserName(userName);
     socket.emit('setUserName', userName);
-  }
+  };
 
   return <>
     {socket && (
@@ -64,7 +64,7 @@ const App = () => {
       <RoomSelector className={game ? "hidden" : ""} socket={socket} joinRoom={joinRoom} userName={userName}/>
     )}
     <div className={`game-container${game ? "" : " hidden"}`}></div>
-  </>
-}
+  </>;
+};
 
 ReactDOM.render(<App/>, document.getElementById('app'));

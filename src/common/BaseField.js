@@ -2,56 +2,56 @@ const Ball = require ('../common/BaseBall');
 const Paddle = require ('../common/BasePaddle');
 const BaseDoubleBall = require('./bonuses/BaseDoubleBall');
 
-module.exports  =  class BaseField {
+module.exports = class BaseField {
   constructor(options){
     this.listeners = [];
     const defaults = {
       h: 1080,
       w: 1440,
-    }
+    };
     Object.assign(defaults, options);
     Object.assign(this, defaults);
     this.players = [
       new Paddle({
         x: 30,
-        y: this.h/2
+        y: this.h / 2,
       }),
       new Paddle({
         x: this.w - 30,
-        y: this.h/2
-      })
+        y: this.h / 2,
+      }),
     ];
     this.bonuses = [];
     this.addBonus();
-    this.balls = [new Ball(this.w/2, this.h/2)];
-    this.score = {player1: 0, player2: 0}
+    this.balls = [new Ball(this.w / 2, this.h / 2)];
+    this.score = {player1: 0, player2: 0};
   }
 
   collideWall(){
-    for(let ball of this.balls){
+    for(const ball of this.balls){
       if((ball.y - ball.radius < 0) && (ball.velocity.y < 0)){
         return ball.velocity.y *= -1;
-      } else if((ball.y + ball.radius >this.h) && (ball.velocity.y > 0)){
+      } else if((ball.y + ball.radius > this.h) && (ball.velocity.y > 0)){
         return ball.velocity.y *= -1;
       }
     }
   }
 
   collidePaddle(){
-    for(let ball of this.balls){
-      for(let player of this.players){
+    for(const ball of this.balls){
+      for(const player of this.players){
         if(player.collide(ball)){
-          if((player == this.players[0] && ball.velocity.x < 0) ||
-             (player == this.players[1] && ball.velocity.x > 0)){
-            let theta = Math.PI*(player.y-ball.y)/(4*player.h/2);
-            let speed = 1.05*Math.hypot(ball.velocity.x, ball.velocity.y);
-            ball.velocity.y = -speed*Math.sin(theta);
+          if((player === this.players[0] && ball.velocity.x < 0) ||
+             (player === this.players[1] && ball.velocity.x > 0)){
+            const theta = Math.PI * (player.y - ball.y) / (4 * player.h / 2);
+            const speed = 1.05 * Math.hypot(ball.velocity.x, ball.velocity.y);
+            ball.velocity.y = -speed * Math.sin(theta);
 
             if(ball.velocity.x > 0){
-              ball.velocity.x = -speed*Math.cos(theta);
+              ball.velocity.x = -speed * Math.cos(theta);
               this.players[1].activateBonuses(ball, this);
             } else {
-              ball.velocity.x = speed*Math.cos(theta);
+              ball.velocity.x = speed * Math.cos(theta);
               this.players[0].activateBonuses(ball, this);
             }
           }
@@ -61,24 +61,25 @@ module.exports  =  class BaseField {
   }
 
   outOfField(){
-    for(let ball of this.balls){
+    for(const ball of this.balls){
       if(ball.x - ball.radius < 0 || ball.x + ball.radius > this.w){
-        if(ball.x - ball.radius < 0)
+        if(ball.x - ball.radius < 0){
           this.score.player2 += 1;
-        else
+        } else {
           this.score.player1 += 1;
+        }
         this.emit('outOfField');
         this.removeBall(ball);
       }
     }
     if(this.balls.length <= 0){
-      this.balls.push(new Ball(this.w/2, this.h/2));
+      this.balls.push(new Ball(this.w / 2, this.h / 2));
     }
   }
 
   collectBonuses(){
-    for(let ball of this.balls){
-      for(let bonus of this.bonuses){
+    for(const ball of this.balls){
+      for(const bonus of this.bonuses){
         if(bonus.collide(ball)){
           this.removeBonus(bonus);
           bonus.collect(ball, this);
@@ -89,7 +90,7 @@ module.exports  =  class BaseField {
   }
 
   update(dt){
-    for(let ball of this.balls){
+    for(const ball of this.balls){
       ball.move(dt);
     }
     this.collideWall();
@@ -104,7 +105,7 @@ module.exports  =  class BaseField {
 
   emit(type, data){
     this.listeners
-      .filter(listener => listener.type == type)
+      .filter(listener => listener.type === type)
       .forEach(listener => listener.callback(data));
   }
 
@@ -121,7 +122,6 @@ module.exports  =  class BaseField {
   }
 
   addBonus(){
-    this.bonuses.push(new BaseDoubleBall(this.w/3 + Math.random()*this.w/3,
-      Math.random()*this.h));
+    this.bonuses.push(new BaseDoubleBall(this.w / 3 + Math.random() * this.w / 3, Math.random() * this.h));
   }
-}
+};

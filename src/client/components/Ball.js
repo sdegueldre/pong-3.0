@@ -11,23 +11,25 @@ module.exports = class Ball extends BaseBall {
   }
 
   removeBall(){
-    console.log("Not gonna remove ball until server says so.");
+    console.warn("Not gonna remove ball until server says so.");
   }
 
   addBall(ball){
-    console.log("Not adding ball on client");
+    console.warn("Not adding ball on client");
   }
 
   set x(value){
     this._x = value;
-    if(this.graphics)
+    if(this.graphics){
       this.graphics.x = value;
+    }
   }
 
   set y(value){
     this._y = value;
-    if(this.graphics)
+    if(this.graphics){
       this.graphics.y = value;
+    }
   }
 
   get x(){
@@ -37,4 +39,4 @@ module.exports = class Ball extends BaseBall {
   get y(){
     return this._y;
   }
-}
+};

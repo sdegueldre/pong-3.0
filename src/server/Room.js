@@ -13,7 +13,7 @@ module.exports = class Room {
     this.tickers = [];
     socket.emit('joinedRoom', this.id);
     socket.emit('roomCreated', this.id);
-    console.log('Created room with id', this.id);
+    console.debug('Created room with id', this.id);
   }
 
   join(socket){
@@ -25,7 +25,7 @@ module.exports = class Room {
       this.startGame();
     }
 
-    if(socket.playerNumber > this.maxPlayers) {
+    if(socket.playerNumber > this.maxPlayers){
       this.players[socket.playerNumber - 1].emit('gameStarted', {
         controlledPlayer: 0,
         initialBall: this.field.balls[0],
@@ -35,13 +35,13 @@ module.exports = class Room {
   }
 
   startGame(){
-    console.log('Enough players have joined the room: starting the game...');
+    console.debug('Enough players have joined the room: starting the game...');
     this.field = new Field();
     this.players[0].on('playerMove', (position) => this.movePlayer(0, position));
     this.players[1].on('playerMove', (position) => this.movePlayer(1, position));
 
     const players = this.players.map(socket => socket.userName);
-    console.log('player names:', players);
+    console.debug('player names:', players);
     this.players[0].emit('gameStarted', {
       controlledPlayer: 1,
       initialBall: this.field.balls[0],
@@ -60,16 +60,16 @@ module.exports = class Room {
     this.field.on('outOfField', () => {
       this.broadcast('playerScored', {
         balls: this.field.balls,
-        score: this.field.score
+        score: this.field.score,
       });
     });
     this.field.on('bonusCollected', () => {
       this.field.addBonus();
       this.broadcast('bonusCollected', {
         bonuses: this.field.bonuses,
-        players: this.field.players
+        players: this.field.players,
       });
-    })
+    });
     this.tick(this.field);
   }
 
@@ -77,30 +77,31 @@ module.exports = class Room {
     this.field.players[playerNumber].y = position.y;
     // Tell other player about the move
     this.players.forEach((player, number) => {
-      if(number === playerNumber) {
+      if(number === playerNumber){
         return;
       }
       player.emit('playerMove', {
         // Players are indexed from 1 on the client
-        playerNumber: playerNumber+1,
-        y: position.y
+        playerNumber: playerNumber + 1,
+        y: position.y,
       });
-    })
+    });
   }
 
   tick(object){
     let lastTick = Date.now();
     this.tickers.push(setInterval(() => {
-      let now = Date.now();
-      let dt = now - lastTick;
+      const now = Date.now();
+      const dt = now - lastTick;
       lastTick = now;
-      object.update.bind(object)(dt/16.667);
+      object.update.bind(object)(dt / 16.667);
     }, 10));
   }
 
   broadcast(type, data){
-    for(let player of this.players)
+    for(const player of this.players){
       player.emit(type, data);
+    }
   }
 
   disconnect(socket){
@@ -114,8 +115,8 @@ module.exports = class Room {
 
   close(){
     this.broadcast('roomClosed');
-    for(let ticker of this.tickers){
+    for(const ticker of this.tickers){
       clearInterval(ticker);
     }
   }
-}
+};

@@ -1,4 +1,4 @@
-module.exports  =  class BasePaddle {
+module.exports = class BasePaddle {
   constructor(options){
     const defaults = {
       x: 0,
@@ -6,31 +6,33 @@ module.exports  =  class BasePaddle {
       w: 30,
       h: 150,
       color: 0xFFFFFF,
-      bonuses: []
-    }
+      bonuses: [],
+    };
     Object.assign(defaults, options);
     Object.assign(this, defaults);
   }
 
   collide(ball){
-    var distX = Math.abs(ball.x - this.x)-this.w/2-ball.radius;
-    var distY = Math.abs(ball.y - this.y)-this.h/2-ball.radius;;
+    const distX = Math.abs(ball.x - this.x) - this.w / 2 - ball.radius;
+    const distY = Math.abs(ball.y - this.y) - this.h / 2 - ball.radius;
 
-    if (distX > 0) { return false; }
-    if (distY > 0) { return false; }
+    if(distX > 0 || distY > 0){
+        return false;
+    }
 
-    if (distX <= 0) { return true; }
-    if (distY <= 0) { return true; }
+    if(distX <= 0 || distY <= 0){
+        return true;
+    }
 
-    var dx=distX-this.w/2;
-    var dy=distY-this.h/2;
-    return (dx*dx+dy*dy<=(ball.r*ball.r));
-    // return ((ball.x - ball.radius < this.x) || (ball.x + ball.radius >this.x));
+    const dx = distX - this.w / 2;
+    const dy = distY - this.h / 2;
+    return (dx * dx + dy * dy <= (ball.r * ball.r));
   }
 
   activateBonuses(ball, field){
-    let bonus;
-    if(bonus = this.bonuses.shift())
+    const bonus = this.bonuses.shift();
+    if(bonus){
       bonus.activate(ball, field);
+    }
   }
-}
+};

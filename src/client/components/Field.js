@@ -5,12 +5,11 @@ const DoubleBall = require('./bonuses/DoubleBall');
 
 module.exports = class Field extends BaseField {
   constructor(app, players, ballData, options){
-    console.log('players', players);
     super(players, options);
     this.graphics = new PIXI.Graphics();
-    for(let i = 0; i*50 < this.h; i++){
+    for(let i = 0; i * 50 < this.h; i++){
       this.graphics.beginFill(0xFFFFFF);
-    	this.graphics.drawRect(this.w/2 - 2.5, 50*i + 10, 5, 30);
+      this.graphics.drawRect(this.w / 2 - 2.5, 50 * i + 10, 5, 30);
       this.graphics.endFill();
     }
     const textSettings = {
@@ -51,22 +50,22 @@ module.exports = class Field extends BaseField {
     this.balls.forEach(b => this.stage.removeChild(b.graphics));
     // Create new balls from the server data
     this.balls = balls.map(ballData => new Ball(ballData.x, ballData.y, {
-      velocity: ballData.velocity
+      velocity: ballData.velocity,
     }));
     // Add the balls back to the stage
     this.balls.forEach(b => this.stage.addChild(b.graphics));
   }
 
   spawnBonus(bonusData){
-    console.log('Spawning bonus!', bonusData);
     switch(bonusData.type){
-      case 'DoubleBall':
-        let bonus = new DoubleBall(bonusData.x, bonusData.y);
+      case 'DoubleBall':{
+        const bonus = new DoubleBall(bonusData.x, bonusData.y);
         this.bonuses.push(bonus);
         this.stage.addChild(bonus.graphics);
         break;
+      }
       default:
-        console.log('Tried to spawn unknown bonus: ', bonusData.type);
+        console.warn('Tried to spawn unknown bonus: ', bonusData.type);
     }
   }
 
@@ -76,7 +75,7 @@ module.exports = class Field extends BaseField {
   }
 
   removeBonus(bonus){
-    super.removeBonus(bonus)
+    super.removeBonus(bonus);
     this.stage.removeChild(bonus.graphics);
   }
 
@@ -85,4 +84,4 @@ module.exports = class Field extends BaseField {
     this.bonuses = bonuses.map(b => new DoubleBall(b.x, b.y));
     this.bonuses.forEach(b => this.stage.addChild(b.graphics));
   }
-}
+};
