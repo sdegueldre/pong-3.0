@@ -88,6 +88,12 @@ input {
   border: 1px solid white;
 }
 
+.spectators-list {
+  position: absolute;
+  list-style: none;
+  left: 0;
+}
+
 canvas {
   height: 100%;
   width: 100%;

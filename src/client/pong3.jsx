@@ -10,6 +10,7 @@ const App = () => {
   const [socket, setSocket] = useState(null);
   const [joinRoom, setJoinRoom] = useState(() => null);
   const [userName, setUserName] = useState('');
+  const [spectators, setSpectators] = useState([]);
   const userNameInput = useRef(null);
 
   gameObj.current.game = game;
@@ -22,8 +23,11 @@ const App = () => {
 
     socket.on('joinedRoom', () => {
       console.debug('joined room');
-      const startGame = ({controlledPlayer, initialBall, players}) => {
+      const startGame = ({controlledPlayer, initialBall, players, spectators}) => {
         console.debug('game started');
+        if(spectators){
+          setSpectators(spectators);
+        }
         gameObj.current.setGame(new Game(controlledPlayer, initialBall, socket, players));
       };
       socket.once('gameStarted', startGame);
@@ -35,6 +39,12 @@ const App = () => {
           gameObj.current.setGame(null);
         }
       });
+    });
+
+    socket.on("updateSpectators", spectators => {
+      if(spectators){
+        setSpectators(spectators);
+      }
     });
 
     const roomId = new URL(window.location).hash.slice(1);
@@ -63,7 +73,11 @@ const App = () => {
       :
       <RoomSelector className={game ? "hidden" : ""} socket={socket} joinRoom={joinRoom} userName={userName}/>
     )}
-    <div className={`game-container${game ? "" : " hidden"}`}></div>
+    <div className={`game-container${game ? "" : " hidden"}`}>
+      <ul className="spectators-list">
+        {spectators.map(spectator => <li key={spectator}>{spectator}</li>)}
+      </ul>
+    </div>
   </>;
 };
 
