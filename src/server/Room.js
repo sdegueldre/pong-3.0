@@ -25,13 +25,17 @@ module.exports = class Room {
       this.startGame();
     }
 
+    const spectators = this.players.slice(2).map(socket => socket.userName);
     if(socket.playerNumber > this.maxPlayers){
       this.players[socket.playerNumber - 1].emit('gameStarted', {
         controlledPlayer: 0,
         initialBall: this.field.balls[0],
         players: this.players.slice(0, 2).map(socket => socket.userName),
+        spectators,
       });
     }
+
+    this.broadcast('updateSpectators', spectators);
   }
 
   startGame(){
@@ -110,6 +114,7 @@ module.exports = class Room {
       this.players.splice(index, 1);
     }
     socket.emit('roomClosed');
+    this.broadcast('updateSpectators', this.players.slice(2).map(socket => socket.userName));
     return index;
   }
 
