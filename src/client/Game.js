@@ -1,10 +1,13 @@
 const PIXI = require('pixi.js');
 const Paddle = require('./components/Paddle');
 const Field = require('./components/Field');
+const {CollisionParticles} = require('./components/Particles');
 
 module.exports = class Game {
   constructor(controlledPlayer, initialBall, socket, players){
     this.socket = socket;
+    this.registeredEvents = [];
+    this.particleGroups = [];
     this.gameContainer = document.querySelector('.game-container');
     this.app = new PIXI.Application({
       antialias: true,
@@ -29,12 +32,16 @@ module.exports = class Game {
     });
     console.debug('Game started');
 
-    this.socket.on('ballSync', this.field.setBalls.bind(this.field));
-    this.socket.on('playerMove', this.movePlayer.bind(this));
-    this.socket.on('playerScored', this.playerScored.bind(this));
-    this.socket.on('bonusSpawned', this.field.spawnBonus.bind(this.field));
-    this.socket.on('bonusCollected', (bonusesPaddles) => {
+    this.on('ballSync', this.field.setBalls.bind(this.field));
+    this.on('playerMove', this.movePlayer.bind(this));
+    this.on('playerScored', this.playerScored.bind(this));
+    this.on('bonusSpawned', this.field.spawnBonus.bind(this.field));
+    this.on('bonusCollected', (bonusesPaddles) => {
       this.field.setBonuses(bonusesPaddles.bonuses);
+    });
+    this.on('collision', ({x, y}) => {
+        this.particleGroups.push(new CollisionParticles({x, y, app: this.app}));
+        this.particleGroups = this.particleGroups.filter(p => p.alive);
     });
   }
 
@@ -96,9 +103,14 @@ module.exports = class Game {
     }
   }
 
+  on(type, handler){
+    this.socket.on(type, handler);
+    this.registeredEvents.push(type);
+  }
+
   destroy(){
     this.app.destroy(true, true);
-    ['ballSync', 'playerMove', 'playerScored', 'bonusSpawned', 'bonusCollected'].forEach(type => this.socket.off(type));
+    this.registeredEvents.forEach(type => this.socket.off(type));
     window.removeEventListener('mousemove', this.mouseMoved);
     window.removeEventListener('keydown', this.fullscreenHandler);
   }

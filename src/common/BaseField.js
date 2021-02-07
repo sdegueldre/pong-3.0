@@ -28,36 +28,43 @@ module.exports = class BaseField {
   }
 
   collideWall(){
-    for(const ball of this.balls){
-      if((ball.y - ball.radius < 0) && (ball.velocity.y < 0)){
-        return ball.velocity.y *= -1;
-      } else if((ball.y + ball.radius > this.h) && (ball.velocity.y > 0)){
-        return ball.velocity.y *= -1;
+    return this.balls.flatMap(ball => {
+      if((ball.y - ball.radius < 0 && ball.velocity.y < 0) ||
+         (ball.y + ball.radius > this.h) && (ball.velocity.y > 0)){
+        ball.velocity.y *= -1;
+        return [{
+            type: 'collision',
+            data: {x: ball.x, y: ball.y},
+        }];
       }
-    }
+      return [];
+    });
   }
 
   collidePaddle(){
-    for(const ball of this.balls){
-      for(const player of this.players){
-        if(player.collide(ball)){
-          if((player === this.players[0] && ball.velocity.x < 0) ||
-             (player === this.players[1] && ball.velocity.x > 0)){
-            const theta = Math.PI * (player.y - ball.y) / (4 * player.h / 2);
-            const speed = 1.05 * Math.hypot(ball.velocity.x, ball.velocity.y);
-            ball.velocity.y = -speed * Math.sin(theta);
+    return this.balls.flatMap(ball => this.players.flatMap(player => {
+      if(player.collide(ball)){
+        if((player === this.players[0] && ball.velocity.x < 0) ||
+           (player === this.players[1] && ball.velocity.x > 0)){
+          const theta = Math.PI * (player.y - ball.y) / (4 * player.h / 2);
+          const speed = 1.05 * Math.hypot(ball.velocity.x, ball.velocity.y);
+          ball.velocity.y = -speed * Math.sin(theta);
 
-            if(ball.velocity.x > 0){
-              ball.velocity.x = -speed * Math.cos(theta);
-              this.players[1].activateBonuses(ball, this);
-            } else {
-              ball.velocity.x = speed * Math.cos(theta);
-              this.players[0].activateBonuses(ball, this);
-            }
+          if(ball.velocity.x > 0){
+            ball.velocity.x = -speed * Math.cos(theta);
+            this.players[1].activateBonuses(ball, this);
+          } else {
+            ball.velocity.x = speed * Math.cos(theta);
+            this.players[0].activateBonuses(ball, this);
           }
         }
+        return [{
+            type: 'collision',
+            data: {x: ball.x, y: ball.y},
+        }];
       }
-    }
+      return [];
+    }));
   }
 
   outOfField(){
@@ -93,10 +100,10 @@ module.exports = class BaseField {
     for(const ball of this.balls){
       ball.move(dt);
     }
-    this.collideWall();
-    this.collidePaddle();
+    const collisions = [...this.collideWall(), ...this.collidePaddle()];
     this.outOfField();
     this.collectBonuses();
+    return collisions;
   }
 
   on(type, callback){

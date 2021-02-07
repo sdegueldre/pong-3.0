@@ -98,7 +98,8 @@ module.exports = class Room {
       const now = Date.now();
       const dt = now - lastTick;
       lastTick = now;
-      object.update.bind(object)(dt / 16.667);
+      const events = object.update(dt / 16.667);
+      events.forEach(({type, data}) => this.broadcast(type, data));
     }, 10));
   }
 
