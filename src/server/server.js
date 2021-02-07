@@ -4,7 +4,7 @@ const Room = require('./Room');
 
 if(process.argv.includes('--watch')){
   const {spawn} = require('child_process');
-  const watcher = spawn('npm', ['run', 'watch']);
+  const watcher = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ['run', 'watch']);
   // eslint-disable-next-line no-console
   watcher.stdout.on('data', data => console.log(`${data}`));
   watcher.stderr.on('data', data => console.error(`E: ${data}`));
