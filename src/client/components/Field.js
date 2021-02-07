@@ -3,15 +3,18 @@ const BaseField = require('../../common/BaseField');
 const Ball = require('./Ball');
 const DoubleBall = require('./bonuses/DoubleBall');
 
-const {normalize} = require('../../common/utils');
+const {norm, sub, mult, normalize} = require('../../common/utils');
 
-const shakeTowards = ({x, y, power}) => {
+const shakeTowards = ({x, y, power, threshold}) => {
   // t: [0;1]
-  ({x, y} = normalize({x, y}));
   return (t) => {
     const tween = 1 - (2 * t - 1) ** 2;
     const factor = power * tween;
-    return {x: factor * x, y: factor * y};
+    const shake = {x: factor * x, y: factor * y};
+    if(norm(shake) < threshold){
+        return {x: 0, y: 0};
+    }
+    return sub(shake, mult(threshold, normalize(shake)));
   };
 };
 
@@ -99,11 +102,7 @@ module.exports = class Field extends BaseField {
 
   shake({x, y}){
     const {app} = this;
-    const shaker = shakeTowards({
-      x: x - this.center.x,
-      y: y - this.center.y,
-      power: 10,
-    });
+    const shaker = shakeTowards({x, y, power: .5, threshold: 10});
     const start = Date.now();
     const duration = 50; // ms
     let delta = {x: 0, y: 0};

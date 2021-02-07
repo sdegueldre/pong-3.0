@@ -35,7 +35,10 @@ module.exports = class BaseField {
         ball.velocity.y *= -1;
         return [{
             type: 'collision',
-            data: {x: ball.x, y: ball.y},
+            data: {
+              pos: {x: ball.x, y: ball.y},
+              vel: {x: 0, y: -ball.velocity.y},
+            },
         }];
       }
       return [];
@@ -61,7 +64,10 @@ module.exports = class BaseField {
         }
         return [{
             type: 'collision',
-            data: {x: ball.x, y: ball.y},
+            data: {
+              pos: {x: ball.x, y: ball.y},
+              vel: {x: -ball.velocity.x, y: 0},
+            },
         }];
       }
       return [];
