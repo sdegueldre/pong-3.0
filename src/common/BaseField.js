@@ -11,6 +11,7 @@ module.exports = class BaseField {
     };
     Object.assign(defaults, options);
     Object.assign(this, defaults);
+    this.center = {x: this.w / 2, y: this.h / 2};
     this.players = [
       new Paddle({
         x: 30,

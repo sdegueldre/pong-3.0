@@ -42,6 +42,7 @@ module.exports = class Game {
     this.on('collision', ({x, y}) => {
         this.particleGroups.push(new CollisionParticles({x, y, app: this.app}));
         this.particleGroups = this.particleGroups.filter(p => p.alive);
+        this.app.ticker.addOnce(() => this.field.shake({x, y}));
     });
   }
 

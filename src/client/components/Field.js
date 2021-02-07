@@ -3,9 +3,22 @@ const BaseField = require('../../common/BaseField');
 const Ball = require('./Ball');
 const DoubleBall = require('./bonuses/DoubleBall');
 
+const {normalize} = require('../../common/utils');
+
+const shakeTowards = ({x, y, power}) => {
+  // t: [0;1]
+  ({x, y} = normalize({x, y}));
+  return (t) => {
+    const tween = 1 - (2 * t - 1) ** 2;
+    const factor = power * tween;
+    return {x: factor * x, y: factor * y};
+  };
+};
+
 module.exports = class Field extends BaseField {
   constructor(app, players, ballData, options){
     super(players, options);
+    this.app = app;
     this.graphics = new PIXI.Graphics();
     for(let i = 0; i * 50 < this.h; i++){
       this.graphics.beginFill(0xFFFFFF);
@@ -24,12 +37,10 @@ module.exports = class Field extends BaseField {
     Object.assign(playerName2, {x: this.w - playerName2.width - 10, y: 5});
 
     this.updateScore();
-    this.stage = app.stage;
     app.ticker.add(this.update.bind(this));
     this.balls[0] = new Ball(ballData.x, ballData.y, {velocity: ballData.velocity});
     this.bonuses = [];
-    this.stage.addChild(
-      this.graphics,
+    this.graphics.addChild(
       players[0].graphics,
       players[1].graphics,
       this.balls[0].graphics,
@@ -37,6 +48,7 @@ module.exports = class Field extends BaseField {
       playerName1,
       playerName2,
     );
+    app.stage.addChild(this.graphics);
   }
 
   updateScore(){
@@ -46,14 +58,14 @@ module.exports = class Field extends BaseField {
   }
 
   setBalls(balls){
-    // Remove all balls from the stage
-    this.balls.forEach(b => this.stage.removeChild(b.graphics));
+    // Remove all balls from the field
+    this.balls.forEach(b => this.graphics.removeChild(b.graphics));
     // Create new balls from the server data
     this.balls = balls.map(ballData => new Ball(ballData.x, ballData.y, {
       velocity: ballData.velocity,
     }));
-    // Add the balls back to the stage
-    this.balls.forEach(b => this.stage.addChild(b.graphics));
+    // Add the balls back to the field
+    this.balls.forEach(b => this.graphics.addChild(b.graphics));
   }
 
   spawnBonus(bonusData){
@@ -61,7 +73,7 @@ module.exports = class Field extends BaseField {
       case 'DoubleBall':{
         const bonus = new DoubleBall(bonusData.x, bonusData.y);
         this.bonuses.push(bonus);
-        this.stage.addChild(bonus.graphics);
+        this.graphics.addChild(bonus.graphics);
         break;
       }
       default:
@@ -71,17 +83,41 @@ module.exports = class Field extends BaseField {
 
   removeBall(ball){
     super.removeBall(ball);
-    this.stage.removeChild(ball.graphics);
+    this.graphics.removeChild(ball.graphics);
   }
 
   removeBonus(bonus){
     super.removeBonus(bonus);
-    this.stage.removeChild(bonus.graphics);
+    this.graphics.removeChild(bonus.graphics);
   }
 
   setBonuses(bonuses){
-    this.bonuses.forEach(b => this.stage.removeChild(b.graphics));
+    this.bonuses.forEach(b => this.graphics.removeChild(b.graphics));
     this.bonuses = bonuses.map(b => new DoubleBall(b.x, b.y));
-    this.bonuses.forEach(b => this.stage.addChild(b.graphics));
+    this.bonuses.forEach(b => this.graphics.addChild(b.graphics));
+  }
+
+  shake({x, y}){
+    const {app} = this;
+    const shaker = shakeTowards({
+      x: x - this.center.x,
+      y: y - this.center.y,
+      power: 10,
+    });
+    const start = Date.now();
+    const duration = 50; // ms
+    let delta = {x: 0, y: 0};
+    const updater = () => {
+        this.graphics.x -= delta.x;
+        this.graphics.y -= delta.y;
+        const tween = (Date.now() - start) / duration;
+        if(tween > 1){
+            return app.ticker.remove(updater);
+        }
+        delta = shaker(tween);
+        this.graphics.x += delta.x;
+        this.graphics.y += delta.y;
+    };
+    app.ticker.add(updater);
   }
 };
