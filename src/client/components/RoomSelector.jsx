@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 
-const RoomSelector = ({socket, joinRoom, className}) => {
+const RoomSelector = ({socket, joinRoom}) => {
   const [rooms, setRooms] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const roomNameInput = useRef(null);
@@ -42,7 +42,7 @@ const RoomSelector = ({socket, joinRoom, className}) => {
     roomNameInput.current.value = '';
   };
 
-  return <div className={`${className} room-selector`}>
+  return <div className="room-selector">
     <div className="room-list-container">
       <h1>Public rooms</h1>
       <p>(click to join)</p>

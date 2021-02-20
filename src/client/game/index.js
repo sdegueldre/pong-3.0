@@ -7,13 +7,12 @@ export default class Game {
     this.socket = socket;
     this.registeredEvents = [];
     this.particleGroups = [];
-    this.gameContainer = document.querySelector('.game-container');
     this.app = new PIXI.Application({
       antialias: true,
       width: 1440,
       height: 1080,
     });
-    this.gameContainer.appendChild(this.app.view);
+    this.element = this.app.view;
 
     this.initPlayers(players);
     if(controlledPlayer){

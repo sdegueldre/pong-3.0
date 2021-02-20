@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect, useRef} from 'react';
-import {RoomSelector} from '/components';
+import {RoomSelector, NameSelector, GameContainer} from '/components';
 import ioClient from 'socket.io-client/dist/socket.io';
 import Game from '/game';
 
@@ -50,36 +50,19 @@ const App = () => {
     setJoinRoom(() => joinRoom);
   }, []);
 
-  const userNameSubmit = ev => {
-    ev.preventDefault();
-    const formData = new FormData(ev.target);
-    const {userName} = Object.fromEntries(formData.entries());
-    setUserName(userName);
-    socket.emit('setUserName', userName);
-    const roomId = new URL(window.location).hash.slice(1);
-    if(roomId){
-      joinRoom(roomId);
-    }
+  const chooseUserName = userName => {
+      setUserName(userName);
+      socket.emit('setUserName', userName);
+      const roomId = new URL(window.location).hash.slice(1);
+      if(roomId){
+        joinRoom(roomId);
+      }
   };
 
-  return <>
-    {socket && (
-      !userName ?
-      <div className="username-selector">
-        <form className="d-flex" onSubmit={userNameSubmit} style={{fontSize: '1rem'}}>
-          <input placeholder="Enter a nickname..." name="userName" className="neon-border" />
-          <button type="submit" className="ml">Go</button>
-        </form>
-      </div>
-      :
-      <RoomSelector className={game ? "hidden" : ""} socket={socket} joinRoom={joinRoom} />
-    )}
-    <div className={`game-container${game ? "" : " hidden"}`}>
-      <ul className="spectators-list">
-        {spectators.map(spectator => <li key={spectator}>{spectator}</li>)}
-      </ul>
-    </div>
-  </>;
+  return !socket ? null :
+    game ? <GameContainer game={game} spectators={spectators}/> :
+    userName ? <RoomSelector socket={socket} joinRoom={joinRoom} /> :
+    <NameSelector chooseUserName={chooseUserName} />;
 };
 
 ReactDOM.render(<App/>, document.getElementById('app'));
