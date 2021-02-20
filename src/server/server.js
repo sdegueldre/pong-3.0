@@ -51,7 +51,7 @@ io.sockets.on('connection', socket => {
   });
 
   socket.on('setUserName', name => {
-    socket.userName = name;
+    socket.userName = name.trim().slice(0, 25);
   });
 
   socket.on('createRoom', ({name, isPublic = true}) => {
@@ -62,7 +62,7 @@ io.sockets.on('connection', socket => {
         rooms.delete(socket.room.id);
       }
     }
-    const room = new Room({socket, name, isPublic});
+    const room = new Room({socket, name: name.trim().slice(0, 50), isPublic});
     rooms.set(room.id, room);
     socket.room = room;
     connections.forEach(socket => {

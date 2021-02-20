@@ -57,11 +57,14 @@ const RoomSelector = ({socket, joinRoom}) => {
     {!currentRoomId ?
       <form className={`create-room`} onSubmit={createRoom}>
         <input placeholder="Room name..."
+          maxLength="50"
           name="roomName"
           ref={roomNameInput}
           className="neon-border"
-          onInput={ev => setRoomName(ev.target.value)}
-          required />
+          onInput={ev => setRoomName(ev.target.value.trim())}
+          required
+          pattern=".*\S+.*"
+          title="Come up with a name for your room" />
         <span>
           <button type="submit" className={!roomName ? 'disabled' : ''}>Create a room</button>
           <label className="private-label ml">Private
