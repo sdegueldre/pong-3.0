@@ -19,6 +19,9 @@ export default class Field extends BaseField {
     super(players, options);
     this.app = app;
     this.graphics = new PIXI.Graphics();
+    this.graphics.lineStyle(2, 0xFFFFFF);
+    this.graphics.drawRect(2, 2, this.w - 2, this.h - 2);
+    this.graphics.lineStyle(0, 0xFFFFFF);
     for(let i = 0; i * 50 < this.h; i++){
       this.graphics.beginFill(0xFFFFFF);
       this.graphics.drawRect(this.w / 2 - 2.5, 50 * i + 10, 5, 30);
