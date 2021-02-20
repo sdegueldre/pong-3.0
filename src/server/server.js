@@ -30,12 +30,18 @@ const rooms = new Map();
 
 function sendRoomList(socket){
   console.debug('sending roomlist to client: ', socket.id);
-  socket.emit('roomList', [...rooms.values()].map(r => ({
-    id: r.id,
-    name: r.name,
-    players: r.players.length,
-    maxPlayers: r.maxPlayers,
-  })));
+  socket.emit(
+    'roomList',
+    [...rooms.values()]
+      .filter(r => r.isPublic || r.players.includes(socket))
+      .map(r => ({
+        id: r.id,
+        name: r.name,
+        players: r.players.length,
+        maxPlayers: r.maxPlayers,
+        isPublic: r.isPublic,
+      })),
+  );
 }
 
 io.sockets.on('connection', socket => {
@@ -51,7 +57,7 @@ io.sockets.on('connection', socket => {
     socket.userName = name;
   });
 
-  socket.on('createRoom', ({name}) => {
+  socket.on('createRoom', ({name, isPublic = true}) => {
     if(socket.room){
       socket.room.disconnect(socket);
       if(socket.room.players.length === 0){
@@ -59,7 +65,7 @@ io.sockets.on('connection', socket => {
         rooms.delete(socket.room.id);
       }
     }
-    const room = new Room({socket, name});
+    const room = new Room({socket, name, isPublic});
     rooms.set(room.id, room);
     socket.room = room;
     connections.forEach(socket => {

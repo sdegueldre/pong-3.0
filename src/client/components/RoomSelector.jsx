@@ -18,7 +18,6 @@ const RoomSelector = ({socket, joinRoom, className}) => {
     socket.emit('getRoomList');
   }, [socket]);
 
-  // eslint-disable-next-line no-unused-vars
   const shareRoom = () => {
     const url = new URL(window.location);
     url.hash = '#' + currentRoomId;
@@ -28,14 +27,17 @@ const RoomSelector = ({socket, joinRoom, className}) => {
   const createRoom = ev => {
     ev.preventDefault();
     const formData = new FormData(ev.target);
-    const {roomName} = Object.fromEntries(formData.entries());
+    const {roomName, isPrivate} = Object.fromEntries(formData.entries());
     if(!roomName){
       return;
     }
-    socket.emit('createRoom', {name: roomName});
+    socket.emit('createRoom', {name: roomName, isPublic: !isPrivate});
     socket.once('roomCreated', id => {
       console.debug('Successfully created room');
       setCurrentRoomId(id);
+      socket.once('roomClosed', () => {
+        setCurrentRoomId(null);
+      });
     });
     roomNameInput.current.value = '';
   };
@@ -50,15 +52,27 @@ const RoomSelector = ({socket, joinRoom, className}) => {
         joinRoom(room.id);
         setCurrentRoomId(null);
       }) : () => null}>
-        {`${room.players}/${room.maxPlayers} ${room.name}${room.id === currentRoomId ? ' ◄' : ''}`}
+        {`${room.players}/${room.maxPlayers} ${room.name}${room.id === currentRoomId ? ' ◄' : ''}${!room.isPublic ? ' (private)' : ''}`}
       </span>
     </div>)}
     </div>
     </div>
+    {!currentRoomId ?
     <form className={`create-room`} onSubmit={createRoom}>
-      <input placeholder="Room name..." name="roomName" ref={roomNameInput} />
-      <button type="submit">Create a room</button>
+      <input placeholder="Room name..." name="roomName" ref={roomNameInput} className="neon-border" />
+      <span>
+        <button type="submit">Create a room</button>
+        <label className="private-label ml">Private
+          <input type="checkbox" name="isPrivate" />
+        </label>
+      </span>
     </form>
+    :
+    <div className="d-flex flex-column p m room-id-container neon-border">
+        <p className="mt-0">Room ID: {currentRoomId}</p>
+        <button onClick={shareRoom}>Copy link to clipboard</button>
+    </div>
+    }
   </div>;
 };
 

@@ -46,10 +46,6 @@ const App = () => {
       }
     });
 
-    const roomId = new URL(window.location).hash.slice(1);
-    if(roomId){
-      joinRoom(roomId);
-    }
     setSocket(socket);
     setJoinRoom(() => joinRoom);
   }, []);
@@ -60,13 +56,18 @@ const App = () => {
     const {userName} = Object.fromEntries(formData.entries());
     setUserName(userName);
     socket.emit('setUserName', userName);
+    const roomId = new URL(window.location).hash.slice(1);
+    if(roomId){
+      joinRoom(roomId);
+    }
   };
 
   return <>
     {socket && (
-      !userName ? <div className="username-selector">
+      !userName ?
+      <div className="username-selector">
         <form className="d-flex" onSubmit={userNameSubmit} style={{fontSize: '1rem'}}>
-          <input placeholder="Enter a nickname..." name="userName" />
+          <input placeholder="Enter a nickname..." name="userName" className="neon-border" />
           <button type="submit" className="ml">Go</button>
         </form>
       </div>
