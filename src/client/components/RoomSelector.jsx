@@ -29,6 +29,9 @@ const RoomSelector = ({socket, joinRoom, className}) => {
     ev.preventDefault();
     const formData = new FormData(ev.target);
     const {roomName} = Object.fromEntries(formData.entries());
+    if(!roomName){
+      return;
+    }
     socket.emit('createRoom', {name: roomName});
     socket.once('roomCreated', id => {
       console.debug('Successfully created room');
