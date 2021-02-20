@@ -67,7 +67,7 @@ const App = () => {
       !userName ? <div className="username-selector">
         <form className="d-flex" onSubmit={userNameSubmit} style={{fontSize: '1rem'}}>
           <input placeholder="Enter a nickname..." ref={userNameInput} />
-          <input type="submit" className="ml" value="Go"/>
+          <button type="submit" className="ml">Go</button>
         </form>
       </div>
       :

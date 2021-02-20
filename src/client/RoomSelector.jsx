@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 
 const RoomSelector = ({socket, joinRoom, className, userName}) => {
   const [rooms, setRooms] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [roomName, setRoomName] = useState('');
+  const roomNameInput = useRef(null);
 
   useEffect(() => {
     socket.on('roomList', rooms => {
@@ -32,6 +33,12 @@ const RoomSelector = ({socket, joinRoom, className, userName}) => {
     });
   };
 
+  const roomNameSubmit = ev => {
+    ev.preventDefault();
+    const roomName = roomNameInput.current.value;
+    createRoom();
+  };
+
   return <div className={`${className} room-selector`}>
     <div className="room-list-container">
       <h1>Public rooms</h1>
@@ -47,10 +54,10 @@ const RoomSelector = ({socket, joinRoom, className, userName}) => {
     </div>)}
     </div>
     </div>
-    <div className={`create-room`}>
-      <input type="text" value={roomName} onChange={ev => setRoomName(ev.target.value)} placeholder="Room name..." />
-      <button type="button" onClick={createRoom}>Create a room</button>
-    </div>
+    <form className={`create-room`} onSubmit={roomNameSubmit}>
+      <input placeholder="Room name..." value={roomName} onChange={ev => setRoomName(ev.target.value)} ref={roomNameInput} />
+      <button type="submit">Create a room</button>
+    </form>
   </div>;
 };
 
