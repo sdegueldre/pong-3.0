@@ -11,7 +11,6 @@ const App = () => {
   const [joinRoom, setJoinRoom] = useState(() => null);
   const [userName, setUserName] = useState('');
   const [spectators, setSpectators] = useState([]);
-  const userNameInput = useRef(null);
 
   gameObj.current.game = game;
   gameObj.current.setGame = setGame;
@@ -57,7 +56,8 @@ const App = () => {
 
   const userNameSubmit = ev => {
     ev.preventDefault();
-    const userName = userNameInput.current.value;
+    const formData = new FormData(ev.target);
+    const {userName} = Object.fromEntries(formData.entries());
     setUserName(userName);
     socket.emit('setUserName', userName);
   };
@@ -66,12 +66,12 @@ const App = () => {
     {socket && (
       !userName ? <div className="username-selector">
         <form className="d-flex" onSubmit={userNameSubmit} style={{fontSize: '1rem'}}>
-          <input placeholder="Enter a nickname..." ref={userNameInput} />
+          <input placeholder="Enter a nickname..." name="userName" />
           <button type="submit" className="ml">Go</button>
         </form>
       </div>
       :
-      <RoomSelector className={game ? "hidden" : ""} socket={socket} joinRoom={joinRoom} userName={userName}/>
+      <RoomSelector className={game ? "hidden" : ""} socket={socket} joinRoom={joinRoom} />
     )}
     <div className={`game-container${game ? "" : " hidden"}`}>
       <ul className="spectators-list">

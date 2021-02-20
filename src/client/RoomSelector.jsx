@@ -1,9 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 
-const RoomSelector = ({socket, joinRoom, className, userName}) => {
+const RoomSelector = ({socket, joinRoom, className}) => {
   const [rooms, setRooms] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(null);
-  const [roomName, setRoomName] = useState('');
   const roomNameInput = useRef(null);
 
   useEffect(() => {
@@ -25,22 +24,16 @@ const RoomSelector = ({socket, joinRoom, className, userName}) => {
     copyToClipboard(url.href);
   };
 
-  const createRoom = () => {
-    if(!roomName){
-      return;
-    }
-    setRoomName('');
+  const createRoom = ev => {
+    ev.preventDefault();
+    const formData = new FormData(ev.target);
+    const {roomName} = Object.fromEntries(formData.entries());
     socket.emit('createRoom', {name: roomName});
     socket.once('roomCreated', id => {
       console.debug('Successfully created room');
       setCurrentRoomId(id);
     });
-  };
-
-  const roomNameSubmit = ev => {
-    ev.preventDefault();
-    const roomName = roomNameInput.current.value;
-    createRoom();
+    roomNameInput.current.value = '';
   };
 
   return <div className={`${className} room-selector`}>
@@ -58,8 +51,8 @@ const RoomSelector = ({socket, joinRoom, className, userName}) => {
     </div>)}
     </div>
     </div>
-    <form className={`create-room`} onSubmit={roomNameSubmit}>
-      <input placeholder="Room name..." value={roomName} onChange={ev => setRoomName(ev.target.value)} ref={roomNameInput} />
+    <form className={`create-room`} onSubmit={createRoom}>
+      <input placeholder="Room name..." name="roomName" ref={roomNameInput} />
       <button type="submit">Create a room</button>
     </form>
   </div>;
