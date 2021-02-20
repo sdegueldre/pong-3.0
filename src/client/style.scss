@@ -7,7 +7,7 @@ body {
   font-family: sans-serif;
   text-shadow: 0 0 2px aqua, 0 0 2px aqua, 0 0 2px aqua;
 
-  button, input[type="submit"] {
+  button {
     font-size: 1.5rem;
     border: 2px solid #fcfdfd;
     color: white;
@@ -56,6 +56,11 @@ input {
   padding: .5rem;
   border-radius: .5rem;
   box-shadow: 0 0 6px 1px aqua, inset 0 0 6px 1px aqua;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 6px 2px aqua, inset 0 0 6px 2px aqua;
+  }
 }
 
 ::placeholder {
