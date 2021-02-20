@@ -12,10 +12,7 @@ const RoomSelector = ({socket, joinRoom}) => {
   }, []);
 
   useEffect(() => {
-    socket.on('roomList', rooms => {
-      console.debug('got room list:', rooms);
-      setRooms(rooms);
-    });
+    socket.on('roomList', setRooms);
     socket.emit('getRoomList');
   }, [socket]);
 
@@ -34,7 +31,6 @@ const RoomSelector = ({socket, joinRoom}) => {
     }
     socket.emit('createRoom', {name: roomName, isPublic: !isPrivate});
     socket.once('roomCreated', id => {
-      console.debug('Successfully created room');
       setCurrentRoomId(id);
       socket.once('roomClosed', () => {
         setCurrentRoomId(null);

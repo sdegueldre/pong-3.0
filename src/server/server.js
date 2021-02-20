@@ -5,15 +5,14 @@ const Room = require('./Room');
 if(process.argv.includes('--watch')){
   const {spawn} = require('child_process');
   const watcher = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ['run', 'watch']);
-  // eslint-disable-next-line no-console
-  watcher.stdout.on('data', data => console.log(`${data}`));
+  watcher.stdout.on('data', data => console.debug(`${data}`));
   watcher.stderr.on('data', data => console.error(`E: ${data}`));
   watcher.on('error', error => {
     console.error(error);
     process.exit(1);
   });
   watcher.on('exit', code => {
-    console.debug('Watcher exited with code', code);
+    console.warn('Watcher exited with code', code);
   });
 }
 
@@ -29,7 +28,6 @@ const connections = new Set();
 const rooms = new Map();
 
 function sendRoomList(socket){
-  console.debug('sending roomlist to client: ', socket.id);
   socket.emit(
     'roomList',
     [...rooms.values()]
@@ -49,11 +47,10 @@ io.sockets.on('connection', socket => {
   connections.add(socket);
 
   socket.on('connect', () => {
-    console.debug('Client reconnected:', socket.id);
+    console.warn('Client reconnected:', socket.id);
   });
 
   socket.on('setUserName', name => {
-    console.debug('setting userName to', name);
     socket.userName = name;
   });
 
@@ -105,10 +102,7 @@ io.sockets.on('connection', socket => {
       }
     }
     connections.delete(socket);
-    console.debug('sending room list to clients:', [...connections].map(s => s.id));
-    connections.forEach(socket => {
-      sendRoomList(socket);
-    });
+    connections.forEach(socket => sendRoomList(socket));
   });
 
   socket.on('getRoomList', () => sendRoomList(socket));

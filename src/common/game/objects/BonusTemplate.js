@@ -9,6 +9,6 @@ module.exports = class BonusTemplate {
   }
 
   activate(){
-    console.debug('BonusTemplate activate function');
+    console.warn('Attempted to activate abstract BonusTemplate');
   }
 };

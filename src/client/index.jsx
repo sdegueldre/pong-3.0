@@ -21,9 +21,7 @@ const App = () => {
     };
 
     socket.on('joinedRoom', () => {
-      console.debug('joined room');
       const startGame = ({controlledPlayer, initialBall, players, spectators}) => {
-        console.debug('game started');
         if(spectators){
           setSpectators(spectators);
         }
@@ -31,7 +29,6 @@ const App = () => {
       };
       socket.once('gameStarted', startGame);
       socket.once('roomClosed', () => {
-        console.debug('Room closed, back to room selector');
         socket.off('gameStarted', startGame);
         if(gameObj.current.game){
           gameObj.current.game.destroy();

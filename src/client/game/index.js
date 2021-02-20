@@ -28,7 +28,6 @@ export default class Game {
       h: this.app.screen.height,
       w: this.app.screen.width,
     });
-    console.debug('Game started');
 
     this.on('ballSync', this.field.setBalls.bind(this.field));
     this.on('playerMove', this.movePlayer.bind(this));
