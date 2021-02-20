@@ -11,7 +11,7 @@ const NameSelector = ({chooseUserName}) => {
   return (
     <div className="username-selector">
       <form className="d-flex" onSubmit={userNameSubmit} style={{fontSize: '1rem'}}>
-        <input placeholder="Enter a nickname..." name="userName" className="neon-border" />
+        <input placeholder="Enter a nickname..." name="userName" className="neon-border" required />
         <button type="submit" className="ml">Go</button>
       </form>
     </div>

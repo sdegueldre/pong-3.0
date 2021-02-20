@@ -76,7 +76,7 @@ input {
   text-shadow: 0 0 6px aqua, 0 0 6px aqua;
 }
 
-input:placeholder-shown + button[type="submit"] {
+input:placeholder-shown + button[type="submit"], button.disabled {
   opacity: 0.3;
 }
 

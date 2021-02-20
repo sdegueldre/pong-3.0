@@ -3,6 +3,7 @@ import React, {useState, useEffect, useRef} from 'react';
 const RoomSelector = ({socket, joinRoom}) => {
   const [rooms, setRooms] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(null);
+  const [roomName, setRoomName] = useState('');
   const roomNameInput = useRef(null);
 
   // Focus room name on mount.
@@ -59,9 +60,14 @@ const RoomSelector = ({socket, joinRoom}) => {
     </div>
     {!currentRoomId ?
       <form className={`create-room`} onSubmit={createRoom}>
-        <input placeholder="Room name..." name="roomName" ref={roomNameInput} className="neon-border" />
+        <input placeholder="Room name..."
+          name="roomName"
+          ref={roomNameInput}
+          className="neon-border"
+          onInput={ev => setRoomName(ev.target.value)}
+          required />
         <span>
-          <button type="submit">Create a room</button>
+          <button type="submit" className={!roomName ? 'disabled' : ''}>Create a room</button>
           <label className="private-label ml">Private
             <input type="checkbox" name="isPrivate" />
           </label>
