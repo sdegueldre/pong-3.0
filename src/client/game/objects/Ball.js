@@ -1,14 +1,21 @@
-const PIXI = require('pixi.js');
-const BasePaddle = require('../../common/BasePaddle');
+import * as PIXI from 'pixi.js';
+import {BaseBall} from '/../common/game/objects';
 
-module.exports = class Paddle extends BasePaddle {
-  constructor(options){
-    super(options);
+export default class Ball extends BaseBall {
+  constructor(x, y, options){
+    super(x, y, options);
     this.graphics = new PIXI.Graphics();
     this.graphics.beginFill(this.color);
-    this.graphics.drawRect(-this.w / 2, -this.h / 2, this.w, this.h);
+    this.graphics.drawCircle(0, 0, this.radius);
     this.graphics.endFill();
-    Object.assign(this, options);
+  }
+
+  removeBall(){
+    console.warn("Not gonna remove ball until server says so.");
+  }
+
+  addBall(ball){
+    console.warn("Not adding ball on client");
   }
 
   set x(value){
@@ -32,4 +39,4 @@ module.exports = class Paddle extends BasePaddle {
   get y(){
     return this._y;
   }
-};
+}

@@ -1,7 +1,7 @@
-const PIXI = require('pixi.js');
-const BaseDoubleBall = require('../../../common/bonuses/BaseDoubleBall');
+import * as PIXI from 'pixi.js';
+import {BaseDoubleBall} from '/../common/game/objects/bonuses';
 
-module.exports = class DoubleBall extends BaseDoubleBall {
+export default class DoubleBall extends BaseDoubleBall {
   constructor(x, y){
     super(x, y);
     const g = new PIXI.Graphics();
@@ -39,4 +39,4 @@ module.exports = class DoubleBall extends BaseDoubleBall {
   get y(){
     return this.graphics.y;
   }
-};
+}

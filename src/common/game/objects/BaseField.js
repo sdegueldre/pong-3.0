@@ -1,6 +1,6 @@
-const Ball = require ('../common/BaseBall');
-const Paddle = require ('../common/BasePaddle');
-const BaseDoubleBall = require('./bonuses/BaseDoubleBall');
+const Ball = require ('./BaseBall');
+const Paddle = require ('./BasePaddle');
+const {BaseDoubleBall} = require('./bonuses');
 
 module.exports = class BaseField {
   constructor(options){

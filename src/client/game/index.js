@@ -1,9 +1,8 @@
-const PIXI = require('pixi.js');
-const Paddle = require('./components/Paddle');
-const Field = require('./components/Field');
-const {CollisionParticles} = require('./components/Particles');
+import * as PIXI from 'pixi.js';
+import {Paddle, Field, Particles} from './objects';
+const {CollisionParticles} = Particles;
 
-module.exports = class Game {
+export default class Game {
   constructor(controlledPlayer, initialBall, socket, players){
     this.socket = socket;
     this.registeredEvents = [];
@@ -119,4 +118,4 @@ module.exports = class Game {
     window.removeEventListener('mousemove', this.mouseMoved);
     window.removeEventListener('keydown', this.fullscreenHandler);
   }
-};
+}

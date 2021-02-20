@@ -1,4 +1,4 @@
-const Field = require ('../common/BaseField');
+const Field = require ('../common/game/objects/BaseField');
 const uuid = require('uuid/v1');
 
 module.exports = class Room {

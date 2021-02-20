@@ -1,9 +1,9 @@
-const PIXI = require('pixi.js');
-const BaseField = require('../../common/BaseField');
-const Ball = require('./Ball');
-const DoubleBall = require('./bonuses/DoubleBall');
+import * as PIXI from 'pixi.js';
+import {BaseField} from '/../common/game/objects';
+import {DoubleBall} from './bonuses';
+import Ball from './Ball';
 
-const {norm, sub, mult, normalize} = require('../../common/utils');
+const {norm, sub, mult, normalize} = require('/../common/utils');
 
 const shakeTowards = ({x, y, power}) => {
   // t: [0;1]
@@ -14,7 +14,7 @@ const shakeTowards = ({x, y, power}) => {
   };
 };
 
-module.exports = class Field extends BaseField {
+export default class Field extends BaseField {
   constructor(app, players, ballData, options){
     super(players, options);
     this.app = app;
@@ -120,4 +120,4 @@ module.exports = class Field extends BaseField {
     };
     app.ticker.add(updater);
   }
-};
+}

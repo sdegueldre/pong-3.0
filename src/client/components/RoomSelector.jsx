@@ -5,6 +5,7 @@ const RoomSelector = ({socket, joinRoom, className}) => {
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const roomNameInput = useRef(null);
 
+  // Focus room name on mount.
   useEffect(() => {
     roomNameInput.current.focus();
   }, []);

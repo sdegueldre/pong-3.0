@@ -1,5 +1,5 @@
-const PIXI = require('pixi.js');
-const {range} = require('../../common/utils.js');
+import * as PIXI from 'pixi.js';
+import {range} from '/../common/utils';
 
 const GRAVITY = 500; // px/s²
 
@@ -17,7 +17,7 @@ class Particle {
   }
 }
 
-module.exports.CollisionParticles = class CollisionParticles {
+export class CollisionParticles {
   constructor({x, y, ticker, parent, birth = Date.now(), lifetime = 500}){
     this.graphics = new PIXI.Graphics();
     this.graphics.x = x;
@@ -48,4 +48,4 @@ module.exports.CollisionParticles = class CollisionParticles {
       graphics.drawRect(particle.pos.x, particle.pos.y, 5, 5);
     });
   }
-};
+}

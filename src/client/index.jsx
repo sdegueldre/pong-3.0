@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect, useRef} from 'react';
-import RoomSelector from './RoomSelector';
+import {RoomSelector} from '/components';
 import ioClient from 'socket.io-client/dist/socket.io';
-import Game from './Game';
+import Game from '/game';
 
 const App = () => {
   const [game, setGame] = useState(null);
