@@ -17,8 +17,9 @@ export default class Game {
     this.initPlayers(players);
     if(controlledPlayer){
       this.player = controlledPlayer === 1 ? this.player1 : this.player2;
-      this.mouseMoved = this.mouseMoved.bind(this);
-      window.addEventListener('mousemove', this.mouseMoved);
+      this.pointerMoved = this.pointerMoved.bind(this);
+      window.addEventListener('pointermove', this.pointerMoved);
+      window.addEventListener('pointerdown', this.pointerMoved);
     }
 
     window.addEventListener('keydown', this.fullscreenHandler);
@@ -81,7 +82,7 @@ export default class Game {
     }
   }
 
-  mouseMoved(e){
+  pointerMoved(e){
     if(!this.canvasHeight){
       this.canvasHeight = document.querySelector('canvas').clientHeight;
     }
@@ -113,7 +114,8 @@ export default class Game {
   destroy(){
     this.app.destroy(true, true);
     this.registeredEvents.forEach(type => this.socket.off(type));
-    window.removeEventListener('mousemove', this.mouseMoved);
+    window.removeEventListener('pointermove', this.pointerMoved);
+    window.removeEventListener('pointerdown', this.pointerMoved);
     window.removeEventListener('keydown', this.fullscreenHandler);
   }
 }
