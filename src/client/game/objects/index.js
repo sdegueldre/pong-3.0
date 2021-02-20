@@ -4,8 +4,8 @@ import * as Particles from './Particles';
 import Ball from './Ball';
 
 export {
-    Paddle,
-    Field,
-    Particles,
-    Ball,
+  Paddle,
+  Field,
+  Particles,
+  Ball,
 };

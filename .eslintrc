@@ -23,7 +23,7 @@
         "no-debugger": ["warn"],
         "eol-last": ["error"],
         "eqeqeq": ["warn", "smart"],
-        "indent": ["off", 4, {"SwitchCase": 1}],
+        "indent": ["error", 2, {"SwitchCase": 1, "flatTernaryExpressions": true}],
         "key-spacing": ["warn"],
         "keyword-spacing": ["warn", {"overrides": {
             "if": { "after": false },

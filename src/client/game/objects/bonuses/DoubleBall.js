@@ -22,7 +22,7 @@ export default class DoubleBall extends BaseDoubleBall {
 
   set x(x){
     if(this.graphics){
-        this.graphics.x = x;
+      this.graphics.x = x;
     }
   }
 

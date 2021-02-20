@@ -34,11 +34,11 @@ module.exports = class BaseField {
          (ball.y + ball.radius > this.h) && (ball.velocity.y > 0)){
         ball.velocity.y *= -1;
         return [{
-            type: 'collision',
-            data: {
-              pos: {x: ball.x, y: ball.y},
-              vel: {x: 0, y: -ball.velocity.y},
-            },
+          type: 'collision',
+          data: {
+            pos: {x: ball.x, y: ball.y},
+            vel: {x: 0, y: -ball.velocity.y},
+          },
         }];
       }
       return [];
@@ -63,11 +63,11 @@ module.exports = class BaseField {
           }
         }
         return [{
-            type: 'collision',
-            data: {
-              pos: {x: ball.x, y: ball.y},
-              vel: {x: -ball.velocity.x, y: 0},
-            },
+          type: 'collision',
+          data: {
+            pos: {x: ball.x, y: ball.y},
+            vel: {x: -ball.velocity.x, y: 0},
+          },
         }];
       }
       return [];

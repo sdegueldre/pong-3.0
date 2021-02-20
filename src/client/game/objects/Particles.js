@@ -36,9 +36,9 @@ export class CollisionParticles {
     const {graphics, birth, lifetime, particles, ticker} = this;
     const timeLeft = birth + lifetime - Date.now();
     if(timeLeft < 0){
-        this.alive = false;
-        graphics.destroy();
-        return ticker.remove(this.update);
+      this.alive = false;
+      graphics.destroy();
+      return ticker.remove(this.update);
     }
     graphics.clear();
     const opacity = 1 - (1 - timeLeft / lifetime) ** 3;

@@ -100,7 +100,7 @@ export default class Field extends BaseField {
     const {app} = this;
     const threshold = 15;
     if(norm({x, y}) < threshold){
-        return;
+      return;
     }
     const shake = sub({x, y}, mult(threshold, normalize({x, y})));
     const shaker = shakeTowards({...shake, power: 1});
@@ -108,15 +108,15 @@ export default class Field extends BaseField {
     const duration = 50; // ms
     let delta = {x: 0, y: 0};
     const updater = () => {
-        this.graphics.x -= delta.x;
-        this.graphics.y -= delta.y;
-        const tween = (Date.now() - start) / duration;
-        if(tween > 1){
-            return app.ticker.remove(updater);
-        }
-        delta = shaker(tween);
-        this.graphics.x += delta.x;
-        this.graphics.y += delta.y;
+      this.graphics.x -= delta.x;
+      this.graphics.y -= delta.y;
+      const tween = (Date.now() - start) / duration;
+      if(tween > 1){
+        return app.ticker.remove(updater);
+      }
+      delta = shaker(tween);
+      this.graphics.x += delta.x;
+      this.graphics.y += delta.y;
     };
     app.ticker.add(updater);
   }

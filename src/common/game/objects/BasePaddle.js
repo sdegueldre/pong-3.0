@@ -17,11 +17,11 @@ module.exports = class BasePaddle {
     const distY = Math.abs(ball.y - this.y) - this.h / 2 - ball.radius;
 
     if(distX > 0 || distY > 0){
-        return false;
+      return false;
     }
 
     if(distX <= 0 || distY <= 0){
-        return true;
+      return true;
     }
 
     const dx = distX - this.w / 2;

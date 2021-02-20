@@ -46,32 +46,32 @@ const RoomSelector = ({socket, joinRoom}) => {
     <div className="room-list-container">
       <h1>Public rooms</h1>
       <p>(click to join)</p>
-    <div className="room-list">
-    {rooms.map(room => <div key={room.id}>
-      <span onClick={room.id !== currentRoomId ? (() => {
-        joinRoom(room.id);
-        setCurrentRoomId(null);
-      }) : () => null}>
-        {`${room.players}/${room.maxPlayers} ${room.name}${room.id === currentRoomId ? ' ◄' : ''}${!room.isPublic ? ' (private)' : ''}`}
-      </span>
-    </div>)}
-    </div>
+      <div className="room-list">
+        {rooms.map(room => <div key={room.id}>
+          <span onClick={room.id !== currentRoomId ? (() => {
+            joinRoom(room.id);
+            setCurrentRoomId(null);
+          }) : () => null}>
+            {`${room.players}/${room.maxPlayers} ${room.name}${room.id === currentRoomId ? ' ◄' : ''}${!room.isPublic ? '   (private)' : ''}`}
+          </span>
+        </div>)}
+      </div>
     </div>
     {!currentRoomId ?
-    <form className={`create-room`} onSubmit={createRoom}>
-      <input placeholder="Room name..." name="roomName" ref={roomNameInput} className="neon-border" />
-      <span>
-        <button type="submit">Create a room</button>
-        <label className="private-label ml">Private
-          <input type="checkbox" name="isPrivate" />
-        </label>
-      </span>
-    </form>
-    :
-    <div className="d-flex flex-column p m room-id-container neon-border">
+      <form className={`create-room`} onSubmit={createRoom}>
+        <input placeholder="Room name..." name="roomName" ref={roomNameInput} className="neon-border" />
+        <span>
+          <button type="submit">Create a room</button>
+          <label className="private-label ml">Private
+            <input type="checkbox" name="isPrivate" />
+          </label>
+        </span>
+      </form>
+      :
+      <div className="d-flex flex-column p m room-id-container neon-border">
         <p className="mt-0">Room ID: {currentRoomId}</p>
         <button onClick={shareRoom}>Copy link to clipboard</button>
-    </div>
+      </div>
     }
   </div>;
 };

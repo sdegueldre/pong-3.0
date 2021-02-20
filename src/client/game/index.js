@@ -38,13 +38,13 @@ export default class Game {
       this.field.setBonuses(bonusesPaddles.bonuses);
     });
     this.on('collision', ({pos: {x, y}, vel: {x: vx, y: vy}}) => {
-        this.particleGroups.push(new CollisionParticles({
-          x, y,
-          ticker: this.app.ticker,
-          parent: this.field.graphics,
-        }));
-        this.particleGroups = this.particleGroups.filter(p => p.alive);
-        this.app.ticker.addOnce(() => this.field.shake({x: vx, y: vy}));
+      this.particleGroups.push(new CollisionParticles({
+        x, y,
+        ticker: this.app.ticker,
+        parent: this.field.graphics,
+      }));
+      this.particleGroups = this.particleGroups.filter(p => p.alive);
+      this.app.ticker.addOnce(() => this.field.shake({x: vx, y: vy}));
     });
   }
 

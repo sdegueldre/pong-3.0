@@ -51,12 +51,12 @@ const App = () => {
   }, []);
 
   const chooseUserName = userName => {
-      setUserName(userName);
-      socket.emit('setUserName', userName);
-      const roomId = new URL(window.location).hash.slice(1);
-      if(roomId){
-        joinRoom(roomId);
-      }
+    setUserName(userName);
+    socket.emit('setUserName', userName);
+    const roomId = new URL(window.location).hash.slice(1);
+    if(roomId){
+      joinRoom(roomId);
+    }
   };
 
   return !socket ? null :

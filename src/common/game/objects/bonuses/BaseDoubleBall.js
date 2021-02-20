@@ -27,18 +27,22 @@ module.exports = class BaseDoubleBall extends BonusTemplate {
     field.addBall(new Ball(
       ball.x,
       ball.y,
-      {velocity: {
-        x: speed * Math.cos(a1),
-        y: speed * Math.sin(a1),
-      },
-    }));
+      {
+        velocity: {
+          x: speed * Math.cos(a1),
+          y: speed * Math.sin(a1),
+        },
+      }),
+    );
     field.addBall(new Ball(
       ball.x,
       ball.y,
-      {velocity: {
-        x: speed * Math.cos(a2),
-        y: speed * Math.sin(a2),
-      },
-    }));
+      {
+        velocity: {
+          x: speed * Math.cos(a2),
+          y: speed * Math.sin(a2),
+        },
+      }),
+    );
   }
 };
