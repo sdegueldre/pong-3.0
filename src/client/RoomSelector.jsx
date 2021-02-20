@@ -7,6 +7,10 @@ const RoomSelector = ({socket, joinRoom, className, userName}) => {
   const roomNameInput = useRef(null);
 
   useEffect(() => {
+    roomNameInput.current.focus();
+  }, []);
+
+  useEffect(() => {
     socket.on('roomList', rooms => {
       console.debug('got room list:', rooms);
       setRooms(rooms);
