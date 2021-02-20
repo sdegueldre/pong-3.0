@@ -6,11 +6,6 @@ const RoomSelector = ({socket, joinRoom}) => {
   const [roomName, setRoomName] = useState('');
   const roomNameInput = useRef(null);
 
-  // Focus room name on mount.
-  useEffect(() => {
-    roomNameInput.current.focus();
-  }, []);
-
   useEffect(() => {
     socket.on('roomList', setRooms);
     socket.emit('getRoomList');
@@ -57,6 +52,7 @@ const RoomSelector = ({socket, joinRoom}) => {
     {!currentRoomId ?
       <form className={`create-room`} onSubmit={createRoom}>
         <input placeholder="Room name..."
+          autoFocus
           maxLength="50"
           name="roomName"
           ref={roomNameInput}
