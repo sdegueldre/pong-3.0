@@ -20,9 +20,9 @@ export default class Game {
       this.pointerMoved = this.pointerMoved.bind(this);
       window.addEventListener('pointermove', this.pointerMoved);
       window.addEventListener('pointerdown', this.pointerMoved);
-      this.resizeHandler = (e => this.canvasHeight = this.app.view.clientHeight).bind(this);
+      this.canvasHeight = document.body.clientHeight;
+      this.resizeHandler = (e => this.canvasHeight = this.element.clientHeight).bind(this);
       window.addEventListener('resize', this.resizeHandler);
-      this.resizeHandler();
     }
 
     window.addEventListener('keydown', this.fullscreenHandler);
