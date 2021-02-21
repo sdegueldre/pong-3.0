@@ -19,11 +19,11 @@ const RoomSelector = ({socket, joinRoom}) => {
 
   const createRoom = ev => {
     ev.preventDefault();
-    const formData = new FormData(ev.target);
-    const {roomName, isPrivate} = Object.fromEntries(formData.entries());
     if(!roomName){
       return;
     }
+    const formData = new FormData(ev.target);
+    const {isPrivate} = Object.fromEntries(formData.entries());
     socket.emit('createRoom', {name: roomName, isPublic: !isPrivate});
     socket.once('roomCreated', id => {
       setCurrentRoomId(id);
