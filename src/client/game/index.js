@@ -20,8 +20,7 @@ export default class Game {
       this.pointerMoved = this.pointerMoved.bind(this);
       window.addEventListener('pointermove', this.pointerMoved);
       window.addEventListener('pointerdown', this.pointerMoved);
-      this.canvasHeight = document.body.clientHeight;
-      this.resizeHandler = (e => this.canvasHeight = this.element.clientHeight).bind(this);
+      this.resizeHandler = this.resizeHandler.bind(this);
       window.addEventListener('resize', this.resizeHandler);
     }
 
@@ -94,6 +93,10 @@ export default class Game {
     this.field.setBalls.bind(this.field)(ballScore.balls);
     this.field.score = ballScore.score;
     this.field.updateScore();
+  }
+
+  resizeHandler(e){
+    this.canvasHeight = this.element.clientHeight;
   }
 
   fullscreenHandler(e){
