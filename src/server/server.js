@@ -26,6 +26,8 @@ app.use(express.static('dist'));
 const io = socketIO(server, {origins: '*:*'});
 const connections = new Set();
 const rooms = new Map();
+let playersCounter = 0;
+let roomsCounter = 0;
 
 function sendRoomList(socket){
   socket.emit(
@@ -51,7 +53,14 @@ io.sockets.on('connection', socket => {
   });
 
   socket.on('setUserName', name => {
-    socket.userName = name.trim().slice(0, 25);
+    const inputName = name.trim().slice(0, 25);
+    if(inputName){
+      socket.userName = inputName;
+    } else {
+      playersCounter++;
+      socket.userName = `Player-${playersCounter}`;
+      socket.emit('updateUserName', socket.userName);
+    }
   });
 
   socket.on('createRoom', ({name, isPublic = true}) => {
@@ -62,7 +71,9 @@ io.sockets.on('connection', socket => {
         rooms.delete(socket.room.id);
       }
     }
-    const room = new Room({socket, name: name.trim().slice(0, 50), isPublic});
+    roomsCounter++;
+    const roomName = name.trim().slice(0, 50);
+    const room = new Room({socket, name: roomName || `Room-${roomsCounter}`, isPublic});
     rooms.set(room.id, room);
     socket.room = room;
     connections.forEach(socket => {

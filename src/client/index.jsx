@@ -43,12 +43,20 @@ const App = () => {
       }
     });
 
+    socket.on("updateUserName", userName => {
+      setUserName(userName);
+    });
+
     setSocket(socket);
     setJoinRoom(() => joinRoom);
   }, []);
 
   const chooseUserName = userName => {
-    setUserName(userName);
+    if(userName){
+      setUserName(userName);
+    } else {
+      setUserName("Player");
+    }
     socket.emit('setUserName', userName);
     const roomId = new URL(window.location).hash.slice(1);
     if(roomId){

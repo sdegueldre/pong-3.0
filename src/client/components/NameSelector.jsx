@@ -15,10 +15,7 @@ const NameSelector = ({chooseUserName}) => {
           autoFocus
           maxLength="25"
           name="userName"
-          className="neon-border"
-          required
-          pattern=".*\S+.*"
-          title="Come up with a nickname for yourself" />
+          className="neon-border" />
         <button type="submit" className="ml">Go</button>
       </form>
     </div>
