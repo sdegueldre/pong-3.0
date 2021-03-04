@@ -19,9 +19,6 @@ const RoomSelector = ({socket, joinRoom}) => {
 
   const createRoom = ev => {
     ev.preventDefault();
-    if(!roomName){
-      return;
-    }
     const formData = new FormData(ev.target);
     const {isPrivate} = Object.fromEntries(formData.entries());
     socket.emit('createRoom', {name: roomName, isPublic: !isPrivate});
@@ -57,12 +54,9 @@ const RoomSelector = ({socket, joinRoom}) => {
           name="roomName"
           ref={roomNameInput}
           className="neon-border"
-          onInput={ev => setRoomName(ev.target.value.trim())}
-          required
-          pattern=".*\S+.*"
-          title="Come up with a name for your room" />
+          onInput={ev => setRoomName(ev.target.value.trim())} />
         <span>
-          <button type="submit" className={!roomName ? 'disabled' : ''}>Create a room</button>
+          <button type="submit">Create a room</button>
           <label className="private-label ml">Private
             <input type="checkbox" name="isPrivate" />
           </label>
