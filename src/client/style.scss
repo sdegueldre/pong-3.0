@@ -87,6 +87,17 @@ input:placeholder-shown + button[type="submit"], button.disabled {
 
   span {
     cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: 0.25s;
+
+    &:hover {
+      background-color: #121315;
+    }
+
+    &:active {
+      box-shadow: 0 0 2px 1px aqua, inset 0 0 2px 1px aqua;
+    }
   }
 }
 
