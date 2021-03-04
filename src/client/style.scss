@@ -20,6 +20,16 @@ body {
     text-shadow: 0 0 6px aqua, 0 0 6px aqua;
     box-shadow: 0 0 6px 1px aqua, inset 0 0 6px 1px aqua;
     cursor: pointer;
+    outline: none;
+
+    &:hover {
+      background-color: #121315;
+    }
+
+    &:active {
+      text-shadow: 0 0 2px aqua, 0 0 2px aqua;
+      box-shadow: 0 0 2px 1px aqua, inset 0 0 2px 1px aqua;
+    }
   }
 }
 
@@ -59,10 +69,19 @@ body {
 input {
   color: white;
   background-color: transparent;
+  transition: 0.25s;
+
+  &:hover {
+    background-color: #121315;
+  }
 
   &:focus {
     outline: none;
     box-shadow: 0 0 6px 2px aqua, inset 0 0 6px 2px aqua;
+  }
+
+  &:active {
+    box-shadow: none;
   }
 
   &[type=checkbox] {
@@ -74,10 +93,6 @@ input {
   color: white;
   opacity: .7;
   text-shadow: 0 0 6px aqua, 0 0 6px aqua;
-}
-
-input:placeholder-shown + button[type="submit"], button.disabled {
-  opacity: 0.3;
 }
 
 .room-list {
