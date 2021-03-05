@@ -59,9 +59,9 @@ module.exports = class Room {
     });
 
     this.broadcast('bonusSpawned', this.field.bonuses[0]);
-    setInterval(() => {
+    this.tickers.push(setInterval(() => {
       this.broadcast('ballSync', this.field.balls);
-    }, 50);
+    }, 50));
     this.field.on('outOfField', () => {
       this.broadcast('playerScored', {
         balls: this.field.balls,
