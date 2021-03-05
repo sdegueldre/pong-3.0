@@ -39,7 +39,7 @@ function sendRoomList(socket){
         name: r.name,
         players: r.players.length,
         maxPlayers: r.maxPlayers,
-        isPublic: r.isPublic,
+        isPublic: r.isPublic
       })),
   );
 }

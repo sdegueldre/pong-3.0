@@ -10,7 +10,7 @@ const App = () => {
   const [socket, setSocket] = useState(null);
   const [joinRoom, setJoinRoom] = useState(() => null);
   const [userName, setUserName] = useState('');
-  const [spectators, setSpectators] = useState([]);
+  const [spectators, setSpectators] = useState([])
 
   gameObj.current.game = game;
   gameObj.current.setGame = setGame;
