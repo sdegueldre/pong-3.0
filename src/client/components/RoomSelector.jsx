@@ -9,6 +9,7 @@ const RoomSelector = ({socket, joinRoom}) => {
   useEffect(() => {
     socket.on('roomList', setRooms);
     socket.emit('getRoomList');
+    return () => socket.off('roomList');
   }, [socket]);
 
   const shareRoom = () => {
