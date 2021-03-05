@@ -59,4 +59,5 @@
             "version": "detect",
         },
     },
+    "root": true,
 }

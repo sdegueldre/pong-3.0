@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src --max-warnings=0",
     "dev": "npm start -- --watch",
     "build": "parcel build src/client/index.html --public-url ./",
     "start": "node src/server/server.js",
