@@ -136,6 +136,6 @@ module.exports = class BaseField {
   }
 
   addBonus(){
-    this.bonuses.push(new BaseDoubleBall(this.w / 3 + Math.random() * this.w / 3, Math.random() * this.h));
+    this.bonuses.push(new BaseDoubleBall(this.w / 3 + Math.random() * this.w / 3, this.h / 8 + 7 * Math.random() * this.h / 8));
   }
 };

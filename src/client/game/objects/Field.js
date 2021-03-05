@@ -32,11 +32,19 @@ export default class Field extends BaseField {
       fill: 0xffffff,
       strokeThickness: 4,
     };
-    this.scoreText = new PIXI.Text('', textSettings);
+    this.playerScore1 = new PIXI.Text('', textSettings);
+    this.playerScore1.anchor.set(1, 0); // top right
+    Object.assign(this.playerScore1, {x: this.w / 2 - 30, y: 5});
+    this.playerScore2 = new PIXI.Text('', textSettings);
+    this.playerScore2.anchor.set(0, 0); // top left
+    Object.assign(this.playerScore2, {x: this.w / 2 + 30, y: 5});
+
     const playerName1 = new PIXI.Text(players[0].name, textSettings);
-    Object.assign(playerName1, {x: 10, y: 5});
+    playerName1.anchor.set(1, 0); // top right
+    Object.assign(playerName1, {x: this.w / 2 - 150, y: 5});
     const playerName2 = new PIXI.Text(players[1].name, textSettings);
-    Object.assign(playerName2, {x: this.w - playerName2.width - 10, y: 5});
+    playerName2.anchor.set(0, 0); // top left
+    Object.assign(playerName2, {x: this.w / 2 + 150, y: 5});
 
     this.updateScore();
     app.ticker.add(this.update.bind(this));
@@ -46,7 +54,8 @@ export default class Field extends BaseField {
       players[0].graphics,
       players[1].graphics,
       this.balls[0].graphics,
-      this.scoreText,
+      this.playerScore1,
+      this.playerScore2,
       playerName1,
       playerName2,
     );
@@ -54,9 +63,8 @@ export default class Field extends BaseField {
   }
 
   updateScore(){
-    this.scoreText.text = `${this.score.player1} - ${this.score.player2}`;
-    this.scoreText.x = this.w - this.scoreText.width - 10;
-    this.scoreText.y = this.h - this.scoreText.height - 5;
+    this.playerScore1.text = this.score.player1;
+    this.playerScore2.text = this.score.player2;
   }
 
   setBalls(balls){
