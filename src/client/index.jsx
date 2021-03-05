@@ -74,7 +74,7 @@ ReactDOM.render(<App/>, document.getElementById('app'));
 
 window.addEventListener("orientationchange", (event) => {
   const angle = Math.abs(event.target.screen.orientation.angle);
-  if(angle === 90 || angle === 270) {
+  if(angle === 90 || angle === 270){
     document.body.requestFullscreen();
   } else {
     document.exitFullscreen();
