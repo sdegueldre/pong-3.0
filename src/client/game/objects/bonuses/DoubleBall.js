@@ -2,8 +2,8 @@ import * as PIXI from 'pixi.js';
 import {BaseDoubleBall} from '/../common/game/objects/bonuses';
 
 export default class DoubleBall extends BaseDoubleBall {
-  constructor(x, y){
-    super(x, y);
+  constructor(x, y, radius){
+    super(x, y, radius);
     const g = new PIXI.Graphics();
     const unit = this.radius / 10;
     g.beginFill(0);

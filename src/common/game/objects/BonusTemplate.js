@@ -1,6 +1,6 @@
 module.exports = class BonusTemplate {
-  constructor(){
-    this.radius = 50;
+  constructor(radius = 50){
+    this.radius = radius;
     this.player = null;
   }
 

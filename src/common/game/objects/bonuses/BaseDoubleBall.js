@@ -2,8 +2,8 @@ const BonusTemplate = require('../BonusTemplate');
 const Ball = require('../BaseBall');
 
 module.exports = class BaseDoubleBall extends BonusTemplate {
-  constructor(x, y){
-    super();
+  constructor(x, y, radius){
+    super(radius);
     this.x = x;
     this.y = y;
     this.type = 'DoubleBall';
