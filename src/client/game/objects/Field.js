@@ -101,9 +101,9 @@ export default class Field extends BaseField {
     this.graphics.removeChild(bonus.graphics);
   }
 
-  setBonuses(bonuses){
+  setBonuses(bonusesPaddles){
     this.bonuses.forEach(b => this.graphics.removeChild(b.graphics));
-    this.bonuses = bonuses.map(b => new DoubleBall(b.x, b.y));
+    this.bonuses = bonusesPaddles.bonuses.map(b => new DoubleBall(b.x, b.y));
     this.bonuses.forEach(b => this.graphics.addChild(b.graphics));
   }
 

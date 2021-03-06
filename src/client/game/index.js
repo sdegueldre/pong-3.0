@@ -36,9 +36,7 @@ export default class Game {
     this.on('playerMove', this.movePlayer.bind(this));
     this.on('playerScored', this.playerScored.bind(this));
     this.on('bonusSpawned', this.field.spawnBonus.bind(this.field));
-    this.on('bonusCollected', (bonusesPaddles) => {
-      this.field.setBonuses(bonusesPaddles.bonuses);
-    });
+    this.on('bonusCollected', this.field.setBonuses.bind(this.field);
     this.on('collision', ({pos: {x, y}, vel: {x: vx, y: vy}}) => {
       this.particleGroups.push(new CollisionParticles({
         x, y,
