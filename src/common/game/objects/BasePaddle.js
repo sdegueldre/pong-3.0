@@ -33,6 +33,7 @@ module.exports = class BasePaddle {
     const bonus = this.bonuses.shift();
     if(bonus){
       bonus.activate(ball, field);
+      field.emit('bonusActivated');
     }
   }
 };

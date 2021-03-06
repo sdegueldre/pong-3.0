@@ -105,6 +105,25 @@ export default class Field extends BaseField {
     this.bonuses.forEach(b => this.graphics.removeChild(b.graphics));
     this.bonuses = bonusesPaddles.bonuses.map(b => new DoubleBall(b.x, b.y));
     this.bonuses.forEach(b => this.graphics.addChild(b.graphics));
+    this.updateBonusIcons(bonusesPaddles.players);
+  }
+
+  updateBonusIcons(players){
+    const bonusIconRadius = 10;
+    const iconMargin = 5;
+    const computeIconOffset = i => 150 + i * (bonusIconRadius * 2 + iconMargin) + bonusIconRadius * 1.3;
+
+    this.players.forEach((player, playerNumber) => {
+      player.bonusIcons.forEach(b => this.graphics.removeChild(b.graphics));
+      const direction = playerNumber % 2 ? 1 : -1;
+      player.bonusIcons = players[playerNumber].bonuses
+        .map((_, i) => {
+          const x = this.w / 2 + direction * computeIconOffset(i);
+          const y = 50 + bonusIconRadius;
+          return new DoubleBall(x, y, bonusIconRadius);
+        });
+      player.bonusIcons.forEach(b => this.graphics.addChild(b.graphics));
+    });
   }
 
   shake({x, y}){
