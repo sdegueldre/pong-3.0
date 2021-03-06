@@ -39,7 +39,7 @@ const RoomSelector = ({socket, joinRoom}) => {
       <h1>Public rooms</h1>
       <p>(click to join)</p>
       <div className="room-list">
-        {rooms.map(room => <span key={room.id} onClick={room.id !== currentRoomId ? (() => {
+        {rooms.map((room, i) => <span key={room.id} tabIndex={i + 1} onClick={room.id !== currentRoomId ? (() => {
             joinRoom(room.id);
             setCurrentRoomId(null);
           }) : () => null}>

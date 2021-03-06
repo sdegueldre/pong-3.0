@@ -111,7 +111,8 @@ input {
       background-color: #121315;
     }
 
-    &:active {
+    &:active, &:focus {
+      outline: none;
       box-shadow: 0 0 2px 1px aqua, inset 0 0 2px 1px aqua;
     }
   }
