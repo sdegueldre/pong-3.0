@@ -75,6 +75,9 @@ module.exports = class Room {
         players: this.field.players,
       });
     });
+    this.field.on('bonusActivated', () => {
+      this.broadcast('bonusActivated', this.field.players);
+    });
     this.tick(this.field);
   }
 

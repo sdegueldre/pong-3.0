@@ -9,6 +9,7 @@ export default class Paddle extends BasePaddle {
     this.graphics.drawRect(-this.w / 2, -this.h / 2, this.w, this.h);
     this.graphics.endFill();
     Object.assign(this, options);
+    this.bonusIcons = [];
   }
 
   set x(value){

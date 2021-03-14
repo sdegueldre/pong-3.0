@@ -3,7 +3,7 @@ const Paddle = require ('./BasePaddle');
 const {BaseDoubleBall} = require('./bonuses');
 
 module.exports = class BaseField {
-  constructor(options){
+  constructor(players, options){
     this.listeners = [];
     const defaults = {
       h: 1080,
@@ -12,7 +12,7 @@ module.exports = class BaseField {
     Object.assign(defaults, options);
     Object.assign(this, defaults);
     this.center = {x: this.w / 2, y: this.h / 2};
-    this.players = [
+    this.players = players || [
       new Paddle({
         x: 30,
         y: this.h / 2,
@@ -136,6 +136,6 @@ module.exports = class BaseField {
   }
 
   addBonus(){
-    this.bonuses.push(new BaseDoubleBall(this.w / 3 + Math.random() * this.w / 3, Math.random() * this.h));
+    this.bonuses.push(new BaseDoubleBall(this.w / 3 + Math.random() * this.w / 3, this.h / 8 + 7 * Math.random() * this.h / 8));
   }
 };
