@@ -37,14 +37,12 @@ const RoomSelector = ({socket, joinRoom}) => {
       <h1>Public rooms</h1>
       <p>(click to join)</p>
       <div className="room-list">
-        {rooms.map(room => <div key={room.id}>
-          <span onClick={room.id !== currentRoomId ? (() => {
+        {rooms.map((room, i) => <span key={room.id} tabIndex={i + 1} onClick={room.id !== currentRoomId ? (() => {
             joinRoom(room.id);
             setCurrentRoomId(null);
           }) : () => null}>
             {`${room.players}/${room.maxPlayers} ${room.name}${room.id === currentRoomId ? ' ◄' : ''}${!room.isPublic ? '   (private)' : ''}`}
-          </span>
-        </div>)}
+        </span>)}
       </div>
     </div>
     {!currentRoomId ?
