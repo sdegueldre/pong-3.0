@@ -4,10 +4,12 @@ const {BaseDoubleBall} = require('./bonuses');
 
 module.exports = class BaseField {
   constructor(options){
+    console.log(arguments);
     this.listeners = [];
     const defaults = {
       h: 1080,
       w: 1440,
+      maxScore: 10,
     };
     Object.assign(defaults, options);
     Object.assign(this, defaults);
@@ -84,6 +86,10 @@ module.exports = class BaseField {
         }
         this.emit('outOfField');
         this.removeBall(ball);
+        const winner = Object.values(this.score).findIndex(val => val >= this.maxScore);
+        if(winner !== -1){
+          this.emit('gameOver', winner);
+        }
       }
     }
     if(this.balls.length <= 0){

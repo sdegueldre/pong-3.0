@@ -123,4 +123,15 @@ export default class Field extends BaseField {
     };
     app.ticker.add(updater);
   }
+
+  gameOver(winnerName){
+    const textSettings = {
+      fontSize: 28,
+      fill: 0xffffff,
+      strokeThickness: 4,
+    };
+    const gameOverText = new PIXI.Text(`${winnerName} wins`, textSettings);
+    Object.assign(gameOverText, {x: this.w / 2, y: this.h / 2});
+    this.graphics.addChild(gameOverText);
+  }
 }
