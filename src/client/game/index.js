@@ -48,6 +48,9 @@ export default class Game {
       this.particleGroups = this.particleGroups.filter(p => p.alive);
       this.app.ticker.addOnce(() => this.field.shake({x: vx, y: vy}));
     });
+    this.on('gameOver', winner => {
+      this.field.gameOver(winner);
+    });
   }
 
   setBall(newBall){
