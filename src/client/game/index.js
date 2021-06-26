@@ -24,8 +24,8 @@ export default class Game {
       window.addEventListener('resize', this.resizeHandler);
     }
 
-    window.addEventListener('keydown', this.fullscreenHandler);
     this.fullscreenHandler = this.fullscreenHandler.bind(this);
+    window.addEventListener('keydown', this.fullscreenHandler);
 
     this.field = new Field(this.app, [this.player1, this.player2], initialBall, {
       h: this.app.screen.height,

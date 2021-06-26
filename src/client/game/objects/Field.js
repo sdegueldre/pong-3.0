@@ -16,7 +16,7 @@ const shakeTowards = ({x, y, power}) => {
 
 export default class Field extends BaseField {
   constructor(app, players, ballData, options){
-    super(players, options);
+    super(options);
     this.app = app;
     this.graphics = new PIXI.Graphics();
     this.graphics.lineStyle(2, 0xFFFFFF);
