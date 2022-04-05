@@ -40,7 +40,7 @@
         "no-unused-vars": ["warn", {"args": "none", "varsIgnorePattern": "^React$"}],
         "no-use-before-define": ["warn", "nofunc"],
         "no-var": ["error"],
-        "object-curly-spacing": ["warn", "never"],
+        "object-curly-spacing": ["warn", "always"],
         "prefer-const": ["warn"],
         "quotes": ["off", "double"],
         "react/prop-types": ["off"],
