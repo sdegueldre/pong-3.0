@@ -3,7 +3,7 @@ const socketIO = require('socket.io');
 const Room = require('./Room');
 
 if(process.argv.includes('--watch')){
-  const {spawn} = require('child_process');
+  const { spawn } = require('child_process');
   const watcher = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", ['run', 'watch']);
   watcher.stdout.on('data', data => console.debug(`${data}`));
   watcher.stderr.on('data', data => console.error(`E: ${data}`));
@@ -23,7 +23,7 @@ const server = app.listen(port, () => {
 });
 app.use(express.static('dist'));
 
-const io = socketIO(server, {origins: '*:*'});
+const io = socketIO(server, { origins: '*:*' });
 const connections = new Set();
 const rooms = new Map();
 let playersCounter = 0;
@@ -63,7 +63,7 @@ io.sockets.on('connection', socket => {
     }
   });
 
-  socket.on('createRoom', ({name, isPublic = true}) => {
+  socket.on('createRoom', ({ name, isPublic = true }) => {
     if(socket.room){
       socket.room.disconnect(socket);
       if(socket.room.players.length === 0){
@@ -73,7 +73,7 @@ io.sockets.on('connection', socket => {
     }
     roomsCounter++;
     const roomName = name.trim().slice(0, 50);
-    const room = new Room({socket, name: roomName || `Room-${roomsCounter}`, isPublic});
+    const room = new Room({ socket, name: roomName || `Room-${roomsCounter}`, isPublic });
     rooms.set(room.id, room);
     socket.room = room;
     connections.forEach(socket => {

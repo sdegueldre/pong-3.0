@@ -1,10 +1,9 @@
 const Ball = require ('./BaseBall');
 const Paddle = require ('./BasePaddle');
-const {BaseDoubleBall} = require('./bonuses');
+const { BaseDoubleBall } = require('./bonuses');
 
 module.exports = class BaseField {
   constructor(options){
-    console.log(arguments);
     this.listeners = [];
     const defaults = {
       h: 1080,
@@ -13,7 +12,7 @@ module.exports = class BaseField {
     };
     Object.assign(defaults, options);
     Object.assign(this, defaults);
-    this.center = {x: this.w / 2, y: this.h / 2};
+    this.center = { x: this.w / 2, y: this.h / 2 };
     this.players = [
       new Paddle({
         x: 30,
@@ -27,7 +26,7 @@ module.exports = class BaseField {
     this.bonuses = [];
     this.addBonus();
     this.balls = [new Ball(this.w / 2, this.h / 2)];
-    this.score = {player1: 0, player2: 0};
+    this.score = { player1: 0, player2: 0 };
   }
 
   collideWall(){
@@ -38,8 +37,8 @@ module.exports = class BaseField {
         return [{
           type: 'collision',
           data: {
-            pos: {x: ball.x, y: ball.y},
-            vel: {x: 0, y: -ball.velocity.y},
+            pos: { x: ball.x, y: ball.y },
+            vel: { x: 0, y: -ball.velocity.y },
           },
         }];
       }
@@ -67,8 +66,8 @@ module.exports = class BaseField {
         return [{
           type: 'collision',
           data: {
-            pos: {x: ball.x, y: ball.y},
-            vel: {x: -ball.velocity.x, y: 0},
+            pos: { x: ball.x, y: ball.y },
+            vel: { x: -ball.velocity.x, y: 0 },
           },
         }];
       }
@@ -120,7 +119,7 @@ module.exports = class BaseField {
   }
 
   on(type, callback){
-    this.listeners.push({type: type, callback: callback});
+    this.listeners.push({ type: type, callback: callback });
   }
 
   emit(type, data){

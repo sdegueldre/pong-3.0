@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-const GameContainer = ({game, spectators}) => {
+const GameContainer = ({ game, spectators }) => {
   useEffect(() => {
     game.resizeHandler();
   }, [game]);

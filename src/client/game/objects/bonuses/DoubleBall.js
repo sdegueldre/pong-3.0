@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {BaseDoubleBall} from '/../common/game/objects/bonuses';
+import { BaseDoubleBall } from '/../common/game/objects/bonuses';
 
 export default class DoubleBall extends BaseDoubleBall {
   constructor(x, y){

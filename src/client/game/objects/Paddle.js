@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {BasePaddle} from '/../common/game/objects';
+import { BasePaddle } from '/../common/game/objects';
 
 export default class Paddle extends BasePaddle {
   constructor(options){
