@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
-import {Paddle, Field, Particles} from './objects';
-const {CollisionParticles} = Particles;
+import { Paddle, Field, Particles } from './objects';
+const { CollisionParticles } = Particles;
 
 export default class Game {
   constructor(controlledPlayer, initialBall, socket, players){
@@ -39,14 +39,14 @@ export default class Game {
     this.on('bonusCollected', (bonusesPaddles) => {
       this.field.setBonuses(bonusesPaddles.bonuses);
     });
-    this.on('collision', ({pos: {x, y}, vel: {x: vx, y: vy}}) => {
+    this.on('collision', ({ pos: { x, y }, vel: { x: vx, y: vy } }) => {
       this.particleGroups.push(new CollisionParticles({
         x, y,
         ticker: this.app.ticker,
         parent: this.field.graphics,
       }));
       this.particleGroups = this.particleGroups.filter(p => p.alive);
-      this.app.ticker.addOnce(() => this.field.shake({x: vx, y: vy}));
+      this.app.ticker.addOnce(() => this.field.shake({ x: vx, y: vy }));
     });
     this.on('gameOver', winner => {
       this.field.gameOver(winner);
@@ -89,7 +89,7 @@ export default class Game {
 
   pointerMoved(e){
     this.player.y = e.layerY * this.app.renderer.screen.height / this.canvasHeight;
-    this.socket.emit('playerMove', {y: this.player.y});
+    this.socket.emit('playerMove', { y: this.player.y });
   }
 
   playerScored(ballScore){

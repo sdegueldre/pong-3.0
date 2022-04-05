@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import {BaseBall} from '/../common/game/objects';
+import { BaseBall } from '/../common/game/objects';
 
 export default class Ball extends BaseBall {
   constructor(x, y, options){

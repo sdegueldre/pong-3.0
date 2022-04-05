@@ -2,7 +2,7 @@ const Field = require ('../common/game/objects/BaseField');
 const uuid = require('uuid/v1');
 
 module.exports = class Room {
-  constructor({socket, name, isPublic, maxScore = 3}){
+  constructor({ socket, name, isPublic, maxScore = 3 }){
     this.owner = socket;
     this.name = name;
     this.isPublic = isPublic;
@@ -42,7 +42,7 @@ module.exports = class Room {
 
   startGame(){
     console.debug('Enough players have joined the room: starting the game...');
-    this.field = new Field({maxScore: this.maxScore});
+    this.field = new Field({ maxScore: this.maxScore });
     this.players[0].on('playerMove', (position) => this.movePlayer(0, position));
     this.players[1].on('playerMove', (position) => this.movePlayer(1, position));
 
@@ -107,7 +107,7 @@ module.exports = class Room {
       const dt = now - lastTick;
       lastTick = now;
       const events = object.update(dt / 16.667);
-      events.forEach(({type, data}) => this.broadcast(type, data));
+      events.forEach(({ type, data }) => this.broadcast(type, data));
     }, 10));
   }
 

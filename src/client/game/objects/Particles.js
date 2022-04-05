@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
-import {range} from '/../common/utils';
+import { range } from '/../common/utils';
 
 const GRAVITY = 500; // px/s²
 
 class Particle {
-  constructor({x = 0, y = 0} = {}){
-    this.pos = {x, y};
-    this.vel = {x: (Math.random() - 0.5) * 25, y: (Math.random() - 0.75) * 25};
+  constructor({ x = 0, y = 0 } = {}){
+    this.pos = { x, y };
+    this.vel = { x: (Math.random() - 0.5) * 25, y: (Math.random() - 0.75) * 25 };
   }
 
   update(dt){
@@ -18,7 +18,7 @@ class Particle {
 }
 
 export class CollisionParticles {
-  constructor({x, y, ticker, parent, birth = Date.now(), lifetime = 500}){
+  constructor({ x, y, ticker, parent, birth = Date.now(), lifetime = 500 }){
     this.graphics = new PIXI.Graphics();
     this.graphics.x = x;
     this.graphics.y = y;
@@ -33,7 +33,7 @@ export class CollisionParticles {
   }
 
   update(dt){
-    const {graphics, birth, lifetime, particles, ticker} = this;
+    const { graphics, birth, lifetime, particles, ticker } = this;
     const timeLeft = birth + lifetime - Date.now();
     if(timeLeft < 0){
       this.alive = false;

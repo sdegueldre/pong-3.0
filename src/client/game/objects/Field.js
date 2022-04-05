@@ -1,16 +1,16 @@
 import * as PIXI from 'pixi.js';
-import {BaseField} from '/../common/game/objects';
-import {DoubleBall} from './bonuses';
+import { BaseField } from '/../common/game/objects';
+import { DoubleBall } from './bonuses';
 import Ball from './Ball';
 
-const {norm, sub, mult, normalize} = require('/../common/utils');
+const { norm, sub, mult, normalize } = require('/../common/utils');
 
-const shakeTowards = ({x, y, power}) => {
+const shakeTowards = ({ x, y, power }) => {
   // t: [0;1]
   return (t) => {
     const tween = 1 - (2 * t - 1) ** 2;
     const factor = power * tween;
-    return {x: factor * x, y: factor * y};
+    return { x: factor * x, y: factor * y };
   };
 };
 
@@ -34,13 +34,13 @@ export default class Field extends BaseField {
     };
     this.scoreText = new PIXI.Text('', textSettings);
     const playerName1 = new PIXI.Text(players[0].name, textSettings);
-    Object.assign(playerName1, {x: 10, y: 5});
+    Object.assign(playerName1, { x: 10, y: 5 });
     const playerName2 = new PIXI.Text(players[1].name, textSettings);
-    Object.assign(playerName2, {x: this.w - playerName2.width - 10, y: 5});
+    Object.assign(playerName2, { x: this.w - playerName2.width - 10, y: 5 });
 
     this.updateScore();
     app.ticker.add(this.update.bind(this));
-    this.balls[0] = new Ball(ballData.x, ballData.y, {velocity: ballData.velocity});
+    this.balls[0] = new Ball(ballData.x, ballData.y, { velocity: ballData.velocity });
     this.bonuses = [];
     this.graphics.addChild(
       players[0].graphics,
@@ -99,17 +99,17 @@ export default class Field extends BaseField {
     this.bonuses.forEach(b => this.graphics.addChild(b.graphics));
   }
 
-  shake({x, y}){
-    const {app} = this;
+  shake({ x, y }){
+    const { app } = this;
     const threshold = 15;
-    if(norm({x, y}) < threshold){
+    if(norm({ x, y }) < threshold){
       return;
     }
-    const shake = sub({x, y}, mult(threshold, normalize({x, y})));
-    const shaker = shakeTowards({...shake, power: 1});
+    const shake = sub({ x, y }, mult(threshold, normalize({ x, y })));
+    const shaker = shakeTowards({ ...shake, power: 1 });
     const start = Date.now();
     const duration = 50; // ms
-    let delta = {x: 0, y: 0};
+    let delta = { x: 0, y: 0 };
     const updater = () => {
       this.graphics.x -= delta.x;
       this.graphics.y -= delta.y;

@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const RoomSelector = ({socket, joinRoom}) => {
+const RoomSelector = ({ socket, joinRoom }) => {
   const [rooms, setRooms] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(null);
   const [roomName, setRoomName] = useState('');
@@ -21,8 +21,8 @@ const RoomSelector = ({socket, joinRoom}) => {
   const createRoom = ev => {
     ev.preventDefault();
     const formData = new FormData(ev.target);
-    const {isPrivate} = Object.fromEntries(formData.entries());
-    socket.emit('createRoom', {name: roomName, isPublic: !isPrivate});
+    const { isPrivate } = Object.fromEntries(formData.entries());
+    socket.emit('createRoom', { name: roomName, isPublic: !isPrivate });
     socket.once('roomCreated', id => {
       setCurrentRoomId(id);
       socket.once('roomClosed', () => {
