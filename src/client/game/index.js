@@ -3,7 +3,7 @@ import { Paddle, Field, Particles } from './objects';
 const { CollisionParticles } = Particles;
 
 export default class Game {
-  constructor(controlledPlayer, initialBall, socket, players){
+  constructor(controlledPlayer, initialBall, socket, players, setGame){
     this.socket = socket;
     this.registeredEvents = [];
     this.particleGroups = [];
@@ -50,6 +50,14 @@ export default class Game {
     });
     this.on('gameOver', winner => {
       this.field.gameOver(winner);
+      const onKeydown = ev => {
+        if(ev.key === "Escape"){
+          window.removeEventListener("keydown", onKeydown);
+          this.destroy();
+          setGame(null);
+        }
+      };
+      window.addEventListener("keydown", onKeydown);
     });
   }
 
@@ -120,6 +128,7 @@ export default class Game {
   destroy(){
     this.app.destroy(true, true);
     this.registeredEvents.forEach(type => this.socket.off(type));
+    this.socket.emit("leaveRoom");
     window.removeEventListener('pointermove', this.pointerMoved);
     window.removeEventListener('pointerdown', this.pointerMoved);
     window.removeEventListener('resize', this.resizeHandler);

@@ -13,7 +13,7 @@ const RoomSelector = ({ socket, joinRoom }) => {
   }, [socket]);
 
   const shareRoom = () => {
-    const url = new URL(window.location);
+    const url = new URL(window.location.href);
     url.hash = '#' + currentRoomId;
     copyToClipboard(url.href);
   };
@@ -25,9 +25,6 @@ const RoomSelector = ({ socket, joinRoom }) => {
     socket.emit('createRoom', { name: roomName, isPublic: !isPrivate });
     socket.once('roomCreated', id => {
       setCurrentRoomId(id);
-      socket.once('roomClosed', () => {
-        setCurrentRoomId(null);
-      });
     });
     roomNameInput.current.value = '';
   };
@@ -51,7 +48,7 @@ const RoomSelector = ({ socket, joinRoom }) => {
       <form className={`create-room`} onSubmit={createRoom}>
         <input placeholder="Room name..."
           autoFocus
-          maxLength="50"
+          maxLength={50}
           name="roomName"
           ref={roomNameInput}
           className="neon-border"

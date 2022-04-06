@@ -5,8 +5,15 @@ const GameContainer = ({ game, spectators }) => {
     game.resizeHandler();
   }, [game]);
 
+  const appendGame = container => {
+    if(container){
+      container.innerHTML = "";
+      container.appendChild(game.element);
+    }
+  };
+
   return (
-    <div className="game-container" ref={container => container && container.appendChild(game.element)}>
+    <div className="game-container" ref={appendGame}>
       <ul className="spectators-list">
         {spectators.map(spectator => <li key={spectator}>{spectator}</li>)}
       </ul>

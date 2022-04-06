@@ -131,7 +131,18 @@ export default class Field extends BaseField {
       strokeThickness: 4,
     };
     const gameOverText = new PIXI.Text(`${winnerName} wins`, textSettings);
-    Object.assign(gameOverText, { x: (this.w - gameOverText.width) / 2, y: (this.h - gameOverText.height) / 2 });
+    Object.assign(gameOverText, {
+      x: (this.w - gameOverText.width) / 2,
+      y: (this.h - gameOverText.height) / 2,
+    });
     this.graphics.addChild(gameOverText);
+    const exitText = new PIXI.Text("press Escape to return to lobby", {
+      fontSize: 24,
+      fill: 0xffffff,
+      strokeThickness: 4,
+    });
+    exitText.x = (this.w - exitText.width) / 2;
+    exitText.y = (this.h - gameOverText.height) / 2 + gameOverText.height;
+    this.graphics.addChild(exitText);
   }
 }
