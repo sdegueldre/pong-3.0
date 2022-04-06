@@ -20,7 +20,7 @@ const App = ({ socket }) => {
           if(spectators){
             setSpectators(spectators);
           }
-          setGame(new Game(controlledPlayer, initialBall, socket, players));
+          setGame(new Game(controlledPlayer, initialBall, socket, players, setGame));
         };
         socket.once('gameStarted', startGame);
         socket.once('roomClosed', () => {

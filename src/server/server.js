@@ -101,8 +101,7 @@ io.sockets.on('connection', socket => {
     });
   });
 
-  socket.on('disconnect', () => {
-    console.debug('client disconnected:', socket.id);
+  const leave = () => {
     const room = socket.room;
     if(room){
       const playerNumber = room.disconnect(socket);
@@ -114,6 +113,14 @@ io.sockets.on('connection', socket => {
     }
     connections.delete(socket);
     connections.forEach(socket => sendRoomList(socket));
+  };
+  socket.on('disconnect', () => {
+    console.debug('client disconnected:', socket.id);
+    leave();
+  });
+  socket.on('leaveRoom', () => {
+    console.debug('client left:', socket.id);
+    leave();
   });
 
   socket.on('getRoomList', () => sendRoomList(socket));
