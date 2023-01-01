@@ -5,13 +5,10 @@ const { BaseDoubleBall } = require('./bonuses');
 module.exports = class BaseField {
   constructor(options){
     this.listeners = [];
-    const defaults = {
-      h: 1080,
-      w: 1440,
-      maxScore: 10,
-    };
-    Object.assign(defaults, options);
-    Object.assign(this, defaults);
+    this.h = 1080;
+    this.w = 1440;
+    this.maxScore = 10;
+    Object.assign(this, options);
     this.center = { x: this.w / 2, y: this.h / 2 };
     this.players = [
       new Paddle({

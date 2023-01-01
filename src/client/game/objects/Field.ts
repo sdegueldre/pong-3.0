@@ -1,13 +1,15 @@
 import * as PIXI from 'pixi.js';
-import { BaseField } from '/../common/game/objects';
-import { DoubleBall } from './bonuses';
+import BaseField from '../../../common/game/objects/BaseField';
+import DoubleBall from './bonuses/DoubleBall';
 import Ball from './Ball';
+import type ClientBallOptions from './Ball';
+import type Paddle from './Paddle';
 
-const { norm, sub, mult, normalize } = require('/../common/utils');
+import { norm, sub, mult, normalize } from '../../../common/utils';
 
-const shakeTowards = ({ x, y, power }) => {
+const shakeTowards = ({ x, y, power }: Vec2 & { power: number }) => {
   // t: [0;1]
-  return (t) => {
+  return (t: number) => {
     const tween = 1 - (2 * t - 1) ** 2;
     const factor = power * tween;
     return { x: factor * x, y: factor * y };
@@ -15,7 +17,11 @@ const shakeTowards = ({ x, y, power }) => {
 };
 
 export default class Field extends BaseField {
-  constructor(app, players, ballData, options){
+  app: PIXI.Application;
+  graphics: PIXI.Graphics;
+  scoreText: PIXI.Text;
+  balls: Ball[];
+  constructor(app: PIXI.Application, players: Paddle[], ballData: Ball, options: Partial<Field>){
     super(options);
     this.app = app;
     this.graphics = new PIXI.Graphics();
@@ -40,9 +46,9 @@ export default class Field extends BaseField {
 
     this.updateScore();
     app.ticker.add(this.update.bind(this));
-    this.balls[0] = new Ball(ballData.x, ballData.y, { velocity: ballData.velocity });
+    this.balls = [new Ball(ballData.x, ballData.y, { velocity: ballData.velocity })];
     this.bonuses = [];
-    this.graphics.addChild(
+    this.graphics.addChild<PIXI.DisplayObject>(
       players[0].graphics,
       players[1].graphics,
       this.balls[0].graphics,
@@ -59,7 +65,7 @@ export default class Field extends BaseField {
     this.scoreText.y = this.h - this.scoreText.height - 5;
   }
 
-  setBalls(balls){
+  setBalls(balls: ClientBallOptions[]){
     // Remove all balls from the field
     this.balls.forEach(b => this.graphics.removeChild(b.graphics));
     // Create new balls from the server data
@@ -70,7 +76,7 @@ export default class Field extends BaseField {
     this.balls.forEach(b => this.graphics.addChild(b.graphics));
   }
 
-  spawnBonus(bonusData){
+  spawnBonus(bonusData: Vec2 & { type: string }){
     switch(bonusData.type){
       case 'DoubleBall':{
         const bonus = new DoubleBall(bonusData.x, bonusData.y);
@@ -83,23 +89,23 @@ export default class Field extends BaseField {
     }
   }
 
-  removeBall(ball){
+  removeBall(ball: Ball){
     super.removeBall(ball);
     this.graphics.removeChild(ball.graphics);
   }
 
-  removeBonus(bonus){
+  removeBonus(bonus: DoubleBall){
     super.removeBonus(bonus);
     this.graphics.removeChild(bonus.graphics);
   }
 
-  setBonuses(bonuses){
+  setBonuses(bonuses: Vec2[]){
     this.bonuses.forEach(b => this.graphics.removeChild(b.graphics));
     this.bonuses = bonuses.map(b => new DoubleBall(b.x, b.y));
     this.bonuses.forEach(b => this.graphics.addChild(b.graphics));
   }
 
-  shake({ x, y }){
+  shake({ x, y }: Vec2){
     const { app } = this;
     const threshold = 15;
     if(norm({ x, y }) < threshold){
@@ -124,7 +130,7 @@ export default class Field extends BaseField {
     app.ticker.add(updater);
   }
 
-  gameOver(winnerName){
+  gameOver(winnerName: string){
     const textSettings = {
       fontSize: 50,
       fill: 0xffffff,

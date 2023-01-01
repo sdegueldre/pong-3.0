@@ -2,7 +2,7 @@ const Field = require ('../common/game/objects/BaseField');
 const uuid = require('uuid/v1');
 
 module.exports = class Room {
-  constructor({ socket, name, isPublic, maxScore = 3 }){
+  constructor({ socket, name, isPublic, maxScore = 300 }){
     this.owner = socket;
     this.name = name;
     this.isPublic = isPublic;
