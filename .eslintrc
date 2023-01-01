@@ -5,7 +5,7 @@
         "es6": true,
         "node": true,
     },
-    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
     "parserOptions": {
         "ecmaVersion": 2019,
         "sourceType": "module",
@@ -38,7 +38,8 @@
         "no-redeclare": ["warn"],
         "no-trailing-spaces": ["warn"],
         "no-unused-vars": ["warn", {"args": "none", "varsIgnorePattern": "^React$"}],
-        "no-use-before-define": ["warn", "nofunc"],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["warn", "nofunc"],
         "no-var": ["error"],
         "object-curly-spacing": ["warn", "always"],
         "prefer-const": ["warn"],
@@ -46,13 +47,16 @@
         "react/prop-types": ["off"],
         "semi-spacing": ["warn", {"before": false, "after": true}],
         "semi": ["warn", "always"],
-        "space-before-blocks": ["warn", {"functions": "never", "keywords": "never", "classes": "always"}],
+        "space-before-blocks": ["off"],
         "space-before-function-paren": ["warn", {"anonymous": "always", "named": "never"}],
         "space-in-parens": ["warn", "never"],
         "space-infix-ops": ["warn"],
+        "@typescript-eslint/ban-ts-comment": ["error", "allow-with-description"],
+        "@typescript-eslint/no-var-requires": "off",
     },
     "plugins": [
         "react",
+        "@typescript-eslint",
     ],
     "settings": {
         "react": {

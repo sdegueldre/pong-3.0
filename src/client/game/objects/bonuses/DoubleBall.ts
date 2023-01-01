@@ -1,8 +1,9 @@
 import * as PIXI from 'pixi.js';
-import { BaseDoubleBall } from '/../common/game/objects/bonuses';
+import { BaseDoubleBall } from '../../../../common/game/objects/bonuses';
 
 export default class DoubleBall extends BaseDoubleBall {
-  constructor(x, y){
+  graphics: PIXI.Graphics;
+  constructor(x: number, y: number){
     super(x, y);
     const g = new PIXI.Graphics();
     const unit = this.radius / 10;
@@ -19,6 +20,12 @@ export default class DoubleBall extends BaseDoubleBall {
     this.x = x;
     this.y = y;
   }
+  // @ts-ignore ts doesn't allow overriding properties with accessors
+  // Making this an accessor on BaseBall makes it non enumerable with a host
+  // of complications.
+  get x(){
+    return this.graphics.x;
+  }
 
   set x(x){
     if(this.graphics){
@@ -26,17 +33,14 @@ export default class DoubleBall extends BaseDoubleBall {
     }
   }
 
-  get x(){
-    return this.graphics.x;
+  // @ts-ignore ts doesn't allow overriding properties with accessors, see above
+  get y(){
+    return this.graphics.y;
   }
 
   set y(y){
     if(this.graphics){
       this.graphics.y = y;
     }
-  }
-
-  get y(){
-    return this.graphics.y;
   }
 }
