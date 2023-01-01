@@ -1,8 +1,13 @@
 import * as PIXI from 'pixi.js';
-import { BaseBall } from '/../common/game/objects';
+import BaseBall from '../../../common/game/objects/BaseBall';
+
+export type ClientBallOptions = { color?: number, radius?: number, velocity: Vec2 };
 
 export default class Ball extends BaseBall {
-  constructor(x, y, options){
+  graphics: PIXI.Graphics;
+  _x!: number;
+  _y!: number;
+  constructor(x: number, y: number, options: ClientBallOptions){
     super(x, y, options);
     this.graphics = new PIXI.Graphics();
     this.graphics.beginFill(this.color);
@@ -14,8 +19,15 @@ export default class Ball extends BaseBall {
     console.warn("Not gonna remove ball until server says so.");
   }
 
-  addBall(ball){
+  addBall(){
     console.warn("Not adding ball on client");
+  }
+
+  // @ts-ignore ts doesn't allow overriding properties with accessors
+  // Making this an accessor on BaseBall makes it non enumerable with a host
+  // of complications.
+  get x(){
+    return this._x;
   }
 
   set x(value){
@@ -25,18 +37,15 @@ export default class Ball extends BaseBall {
     }
   }
 
+  // @ts-ignore ts doesn't allow overriding properties with accessors, see get x
+  get y(){
+    return this._y;
+  }
+
   set y(value){
     this._y = value;
     if(this.graphics){
       this.graphics.y = value;
     }
-  }
-
-  get x(){
-    return this._x;
-  }
-
-  get y(){
-    return this._y;
   }
 }

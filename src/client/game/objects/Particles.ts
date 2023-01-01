@@ -1,24 +1,37 @@
 import * as PIXI from 'pixi.js';
-import { range } from '/../common/utils';
+import { range } from '../../../common/utils';
 
 const GRAVITY = 500; // px/s²
 
 class Particle {
+  pos: Vec2;
+  vel: Vec2;
   constructor({ x = 0, y = 0 } = {}){
     this.pos = { x, y };
     this.vel = { x: (Math.random() - 0.5) * 25, y: (Math.random() - 0.75) * 25 };
   }
 
-  update(dt){
+  update(dt: number){
     this.vel.y += GRAVITY * dt / 1000;
-    Object.keys(this.pos).forEach(key => {
-      this.pos[key] += this.vel[key];
-    });
+    this.pos.x += this.vel.x;
+    this.pos.y += this.vel.y;
   }
 }
 
-export class CollisionParticles {
-  constructor({ x, y, ticker, parent, birth = Date.now(), lifetime = 500 }){
+type ParticleInit = Vec2 & {
+  ticker: PIXI.ticker.Ticker;
+  parent: PIXI.Graphics;
+  birth?: number;
+  lifetime?: number;
+}
+export default class CollisionParticles {
+  graphics: PIXI.Graphics;
+  ticker: PIXI.ticker.Ticker;
+  birth: number;
+  lifetime: number;
+  particles: Particle[];
+  alive: boolean;
+  constructor({ x, y, ticker, parent, birth = Date.now(), lifetime = 500 }: ParticleInit){
     this.graphics = new PIXI.Graphics();
     this.graphics.x = x;
     this.graphics.y = y;
@@ -32,7 +45,7 @@ export class CollisionParticles {
     this.alive = true;
   }
 
-  update(dt){
+  update(dt: number){
     const { graphics, birth, lifetime, particles, ticker } = this;
     const timeLeft = birth + lifetime - Date.now();
     if(timeLeft < 0){

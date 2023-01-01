@@ -1,15 +1,12 @@
 module.exports = class BasePaddle {
   constructor(options){
-    const defaults = {
-      x: 0,
-      y: 0,
-      w: 30,
-      h: 150,
-      color: 0xFFFFFF,
-      bonuses: [],
-    };
-    Object.assign(defaults, options);
-    Object.assign(this, defaults);
+    this.x = 0;
+    this.y = 0;
+    this.w = 30;
+    this.h = 150;
+    this.color = 0xFFFFFF;
+    this.bonuses = [];
+    Object.assign(this, options);
   }
 
   collide(ball){

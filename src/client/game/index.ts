@@ -1,9 +1,23 @@
 import * as PIXI from 'pixi.js';
-import { Paddle, Field, Particles } from './objects';
-const { CollisionParticles } = Particles;
+import Paddle from './objects/Paddle';
+import Field from "./objects/Field";
+import type ClientBallOptions from './objects/Ball';
+import CollisionParticles from './objects/Particles';
+
+type GameSetter = (game: null) => void;
 
 export default class Game {
-  constructor(controlledPlayer, initialBall, socket, players, setGame){
+  socket: Socket;
+  registeredEvents: string[];
+  particleGroups: CollisionParticles[];
+  app: PIXI.Application;
+  element: HTMLCanvasElement;
+  field: Field;
+  player1: Paddle;
+  player2: Paddle;
+  player?: Paddle;
+  canvasHeight: number;
+  constructor(controlledPlayer: number, initialBall: ClientBallOptions, socket: Socket, players: string[], setGame: GameSetter){
     this.socket = socket;
     this.registeredEvents = [];
     this.particleGroups = [];
@@ -14,14 +28,23 @@ export default class Game {
     });
     this.element = this.app.view;
 
-    this.initPlayers(players);
+    this.player1 = new Paddle({
+      x: 30,
+      y: this.app.screen.height / 2,
+      name: players[0],
+    });
+
+    this.player2 = new Paddle({
+      x: this.app.screen.width - 30,
+      y: this.app.screen.height / 2,
+      name: players[1],
+    });
+
     if(controlledPlayer){
       this.player = controlledPlayer === 1 ? this.player1 : this.player2;
       this.pointerMoved = this.pointerMoved.bind(this);
       window.addEventListener('pointermove', this.pointerMoved);
       window.addEventListener('pointerdown', this.pointerMoved);
-      this.resizeHandler = this.resizeHandler.bind(this);
-      window.addEventListener('resize', this.resizeHandler);
     }
 
     this.fullscreenHandler = this.fullscreenHandler.bind(this);
@@ -36,10 +59,10 @@ export default class Game {
     this.on('playerMove', this.movePlayer.bind(this));
     this.on('playerScored', this.playerScored.bind(this));
     this.on('bonusSpawned', this.field.spawnBonus.bind(this.field));
-    this.on('bonusCollected', (bonusesPaddles) => {
+    this.on('bonusCollected', (bonusesPaddles: { bonuses: Vec2[] }) => {
       this.field.setBonuses(bonusesPaddles.bonuses);
     });
-    this.on('collision', ({ pos: { x, y }, vel: { x: vx, y: vy } }) => {
+    this.on('collision', ({ pos: { x, y }, vel: { x: vx, y: vy } }: { pos: Vec2, vel: Vec2 }) => {
       this.particleGroups.push(new CollisionParticles({
         x, y,
         ticker: this.app.ticker,
@@ -48,9 +71,9 @@ export default class Game {
       this.particleGroups = this.particleGroups.filter(p => p.alive);
       this.app.ticker.addOnce(() => this.field.shake({ x: vx, y: vy }));
     });
-    this.on('gameOver', winner => {
+    this.on('gameOver', (winner: string) => {
       this.field.gameOver(winner);
-      const onKeydown = ev => {
+      const onKeydown = (ev: KeyboardEvent) => {
         if(ev.key === "Escape"){
           window.removeEventListener("keydown", onKeydown);
           this.destroy();
@@ -59,32 +82,11 @@ export default class Game {
       };
       window.addEventListener("keydown", onKeydown);
     });
+    this.canvasHeight = 0;
+    this.fullscreenHandler;
   }
 
-  setBall(newBall){
-    this.field.ball.x = newBall.x;
-    this.field.ball.y = newBall.y;
-    this.field.ball.velocity = newBall.velocity;
-  }
-
-  initPlayers(names){
-    this.player1 = new Paddle({
-      x: 30,
-      y: this.app.screen.height / 2,
-    });
-    this.player1.name = names[0];
-
-    this.player2 = new Paddle({
-      x: this.app.screen.width - 30,
-      y: this.app.screen.height / 2,
-    });
-    this.player2.name = names[1];
-
-    this.player1.interactive = true;
-    this.player2.interactive = true;
-  }
-
-  movePlayer(data){
+  movePlayer(data: { playerNumber: number, y: number }){
     switch(data.playerNumber){
       case 1:
         this.player1.y = data.y;
@@ -95,22 +97,18 @@ export default class Game {
     }
   }
 
-  pointerMoved(e){
-    this.player.y = e.layerY * this.app.renderer.screen.height / this.canvasHeight;
-    this.socket.emit('playerMove', { y: this.player.y });
+  pointerMoved(e: MouseEvent){
+    this.player!.y = e.clientY * this.app.renderer.screen.height / this.element.clientHeight;
+    this.socket.emit('playerMove', { y: this.player!.y });
   }
 
-  playerScored(ballScore){
-    this.field.setBalls.bind(this.field)(ballScore.balls);
+  playerScored(ballScore: { balls: ClientBallOptions[], score: { player1: number, player2: number }}){
+    this.field.setBalls(ballScore.balls);
     this.field.score = ballScore.score;
     this.field.updateScore();
   }
 
-  resizeHandler(e){
-    this.canvasHeight = this.element.clientHeight;
-  }
-
-  fullscreenHandler(e){
+  fullscreenHandler(e: KeyboardEvent){
     if(e.key === ' '){
       if(document.fullscreen){
         document.exitFullscreen();
@@ -120,7 +118,11 @@ export default class Game {
     }
   }
 
-  on(type, handler){
+  resizeHandler(){
+    this.canvasHeight = this.element.clientHeight;
+  }
+
+  on(type: string, handler: (arg: any) => void){
     this.socket.on(type, handler);
     this.registeredEvents.push(type);
   }
@@ -131,7 +133,6 @@ export default class Game {
     this.socket.emit("leaveRoom");
     window.removeEventListener('pointermove', this.pointerMoved);
     window.removeEventListener('pointerdown', this.pointerMoved);
-    window.removeEventListener('resize', this.resizeHandler);
     window.removeEventListener('keydown', this.fullscreenHandler);
   }
 }

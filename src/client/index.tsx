@@ -1,22 +1,35 @@
 import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
-import { RoomSelector, NameSelector, GameContainer } from './components';
+import RoomSelector from "./components/RoomSelector";
+import NameSelector from "./components/NameSelector";
+import GameContainer from "./components/GameContainer";
 import ioClient from 'socket.io-client/dist/socket.io';
 import Game from './game';
+import { EventEmitter } from "events";
+import type ClientBallOptions from './game/objects/Ball';
 
-const App = ({ socket }) => {
-  const [game, setGame] = useState(null);
+type Spectator = string;
+
+type GameInit = {
+  controlledPlayer: number,
+  initialBall: ClientBallOptions,
+  players: string[],
+  spectators: Spectator[],
+}
+
+const App = ({ socket }: { socket: EventEmitter }) => {
+  const [game, setGame] = useState<Game | null>(null);
   const [userName, setUserName] = useState('');
-  const [spectators, setSpectators] = useState([]);
+  const [spectators, setSpectators] = useState<Spectator[]>([]);
 
-  const joinRoom = async (roomId) => {
+  const joinRoom = async (roomId: string) => {
     socket.emit('joinRoom', roomId);
   };
 
   useEffect(() => {
     if(!game){
       socket.on('joinedRoom', () => {
-        const startGame = ({ controlledPlayer, initialBall, players, spectators }) => {
+        const startGame = ({ controlledPlayer, initialBall, players, spectators }: GameInit) => {
           if(spectators){
             setSpectators(spectators);
           }
@@ -25,10 +38,12 @@ const App = ({ socket }) => {
         socket.once('gameStarted', startGame);
         socket.once('roomClosed', () => {
           socket.off('gameStarted', startGame);
-          if(game){
-            game.destroy();
-            setGame(null);
-          }
+          setGame(game => {
+            if(game){
+              game.destroy();
+            }
+            return null;
+          });
         });
       });
     }
@@ -46,7 +61,7 @@ const App = ({ socket }) => {
     });
   }, []);
 
-  const chooseUserName = userName => {
+  const chooseUserName = (userName: string) => {
     if(userName){
       setUserName(userName);
     } else {

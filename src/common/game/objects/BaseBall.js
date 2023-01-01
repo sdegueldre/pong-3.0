@@ -1,27 +1,24 @@
 module.exports = class BaseBall {
-  constructor(x, y, options){
+  constructor(x, y, options) {
     const theta = (Math.random() - 0.5) * 2 * Math.PI / 3;
     const speed = 10 * (Math.round(Math.random()) * 2 - 1);
-    const defaults = {
-      velocity: {
-        x: speed * Math.cos(theta),
-        y: speed * Math.sin(theta),
-      },
-      radius: 18,
-      color: 0x00FFFF,
+    this.velocity = {
+      x: speed * Math.cos(theta),
+      y: speed * Math.sin(theta),
     };
-    Object.assign(defaults, options);
-    Object.assign(this, defaults);
+    this.radius = 18;
+    this.color = 0x00FFFF;
+    Object.assign(this, options);
     this.x = x;
     this.y = y;
   }
 
-  move(dt){
+  move(dt) {
     this.x += this.velocity.x * dt;
     this.y += this.velocity.y * dt;
   }
 
-  reset(x, y){
+  reset(x, y) {
     this.x = x;
     this.y = y;
     const theta = (Math.random() - 0.5) * 2 * Math.PI / 3;
