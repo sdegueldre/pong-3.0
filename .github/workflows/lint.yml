@@ -25,4 +25,5 @@ jobs:
           ${{ runner.OS }}-node-
           ${{ runner.OS }}-
     - run: npm ci
+    - run: npm run checkts
     - run: npm run lint

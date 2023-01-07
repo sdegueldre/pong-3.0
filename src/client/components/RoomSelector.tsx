@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, FormEventHandler } from 'react';
 
-const RoomSelector = ({ socket, joinRoom }) => {
-  const [rooms, setRooms] = useState([]);
-  const [currentRoomId, setCurrentRoomId] = useState(null);
+type Room = {
+  id: string,
+  name: string,
+  maxPlayers: number,
+  players: number,
+  isPublic: boolean,
+}
+const RoomSelector = ({ socket, joinRoom }: { socket: Socket, joinRoom: (id: string) => void }) => {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
   const [roomName, setRoomName] = useState('');
-  const roomNameInput = useRef(null);
+  const roomNameInput = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     socket.on('roomList', setRooms);
@@ -18,15 +25,15 @@ const RoomSelector = ({ socket, joinRoom }) => {
     copyToClipboard(url.href);
   };
 
-  const createRoom = ev => {
+  const createRoom: FormEventHandler<HTMLFormElement> = ev => {
     ev.preventDefault();
-    const formData = new FormData(ev.target);
+    const formData = new FormData(ev.currentTarget);
     const { isPrivate } = Object.fromEntries(formData.entries());
     socket.emit('createRoom', { name: roomName, isPublic: !isPrivate });
-    socket.once('roomCreated', id => {
+    socket.once('roomCreated', (id: string) => {
       setCurrentRoomId(id);
     });
-    roomNameInput.current.value = '';
+    roomNameInput.current!.value = '';
   };
 
   return <div className="room-selector">
@@ -52,7 +59,7 @@ const RoomSelector = ({ socket, joinRoom }) => {
           name="roomName"
           ref={roomNameInput}
           className="neon-border"
-          onInput={ev => setRoomName(ev.target.value.trim())} />
+          onInput={ev => setRoomName(ev.currentTarget.value.trim())} />
         <span>
           <button type="submit">Create a room</button>
           <label className="private-label ml">Private
@@ -69,7 +76,7 @@ const RoomSelector = ({ socket, joinRoom }) => {
   </div>;
 };
 
-function copyToClipboard(str){
+function copyToClipboard(str: string){
   const el = document.createElement('textarea');
   el.value = str;
   document.body.appendChild(el);
