@@ -6,21 +6,21 @@ body {
   color: white;
   font-family: sans-serif;
   text-shadow: 0 0 2px aqua, 0 0 2px aqua, 0 0 2px aqua;
+}
 
-  button {
-    font-size: 1.5rem;
-    border: 2px solid #fcfdfd;
-    color: white;
-    text-align: center;
-    border-radius: 100px;
-    text-transform: uppercase;
-    font-family: sans-serif;
-    transition: 0.25s;
-    background-color: transparent;
-    text-shadow: 0 0 6px aqua, 0 0 6px aqua;
-    box-shadow: 0 0 6px 1px aqua, inset 0 0 6px 1px aqua;
-    cursor: pointer;
-  }
+button {
+  font-size: 1.5rem;
+  border: 2px solid #fcfdfd;
+  color: white;
+  text-align: center;
+  border-radius: 100px;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  transition: 0.25s;
+  background-color: transparent;
+  text-shadow: 0 0 6px aqua, 0 0 6px aqua;
+  box-shadow: 0 0 6px 1px aqua, inset 0 0 6px 1px aqua;
+  cursor: pointer;
 }
 
 .room-selector, .username-selector {
@@ -33,21 +33,20 @@ body {
 
 .room-list-container {
   text-align: center;
-  p, h1 {
-    margin: .25rem;
-  }
+}
+.room-list-container p, .room-list-container h1 {
+  margin: .25rem;
 }
 
 .create-room {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
-
-  button {
-    margin-top: .5rem;
-  }
 }
 
+.create-room button {
+  margin-top: .5rem;
+}
 
 .neon-border {
   padding: .5rem;
@@ -60,14 +59,15 @@ input {
   color: white;
   background-color: transparent;
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 6px 2px aqua, inset 0 0 6px 2px aqua;
-  }
+}
 
-  &[type=checkbox] {
-      vertical-align: middle;
-  }
+input:focus {
+  outline: none;
+  box-shadow: 0 0 6px 2px aqua, inset 0 0 6px 2px aqua;
+}
+
+input[type=checkbox] {
+    vertical-align: middle;
 }
 
 ::placeholder {
@@ -80,10 +80,10 @@ input {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
+}
 
-  span {
-    cursor: pointer;
-  }
+.room-list span {
+  cursor: pointer;
 }
 
 .room-share {
@@ -150,9 +150,7 @@ canvas {
   text-shadow: none;
 }
 
-.room-id-container {
-  p {
-    font-family: monospace;
-    text-shadow: none;
-  }
+.room-id-container  p {
+  font-family: monospace;
+  text-shadow: none;
 }

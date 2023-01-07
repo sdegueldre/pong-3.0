@@ -21,7 +21,7 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   console.debug('Server listening: on http://localhost:' + port);
 });
-app.use(express.static('dist'));
+app.use(express.static('public'));
 
 const io = socketIO(server, { origins: '*:*' });
 const connections = new Set();
