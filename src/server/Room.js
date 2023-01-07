@@ -1,5 +1,5 @@
 const Field = require ('../common/game/objects/BaseField');
-const uuid = require('uuid/v1');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = class Room {
   constructor({ socket, name, isPublic, maxScore = 25 }){
@@ -8,7 +8,7 @@ module.exports = class Room {
     this.isPublic = isPublic;
     this.maxScore = maxScore;
     this.owner.playerNumber = 1;
-    this.id = uuid();
+    this.id = uuidv4();
     this.players = [this.owner];
     this.maxPlayers = 2;
     this.minPlayers = 2;
