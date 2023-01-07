@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
+import type Game from '../game';
 
-const GameContainer = ({ game, spectators }) => {
+const GameContainer = ({ game, spectators }: { game: Game, spectators: string[] }) => {
   useEffect(() => {
     game.resizeHandler();
   }, [game]);
 
-  const appendGame = container => {
+  const appendGame = (container: HTMLElement | null) => {
     if(container){
       container.innerHTML = "";
       container.appendChild(game.element);
