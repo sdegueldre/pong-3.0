@@ -8,7 +8,6 @@ const GameContainer = ({ game, spectators }: { game: Game, spectators: string[] 
 
   const appendGame = (container: HTMLElement | null) => {
     if(container){
-      container.innerHTML = "";
       container.appendChild(game.element);
     }
   };
