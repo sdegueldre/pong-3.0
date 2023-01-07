@@ -3,6 +3,7 @@ import Paddle from './objects/Paddle';
 import Field from "./objects/Field";
 import type ClientBallOptions from './objects/Ball';
 import CollisionParticles from './objects/Particles';
+import type { Socket } from "socket.io-client";
 
 type GameSetter = (game: null) => void;
 
