@@ -28,7 +28,6 @@
   "dependencies": {
     "@types/react": "^18.0.5",
     "express": "^4.17.1",
-    "pixi.js": "^4.8.9",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "socket.io": "^2.4.1",
@@ -36,7 +35,6 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.24",
-    "@types/pixi.js": "^4.8.9",
     "@types/react-dom": "^18.0.1",
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",

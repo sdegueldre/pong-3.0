@@ -1,11 +1,13 @@
-import * as PIXI from 'pixi.js';
+import { Graphics } from "../engine/Graphics";
+import { Text } from "../engine/Text";
 import BaseField from '../../../common/game/objects/BaseField';
 import DoubleBall from './bonuses/DoubleBall';
 import Ball from './Ball';
+import { norm, sub, mult, normalize } from '../../../common/utils';
+
+import type { Application } from "../engine/Application";
 import type ClientBallOptions from './Ball';
 import type Paddle from './Paddle';
-
-import { norm, sub, mult, normalize } from '../../../common/utils';
 
 const shakeTowards = ({ x, y, power }: Vec2 & { power: number }) => {
   // t: [0;1]
@@ -17,14 +19,14 @@ const shakeTowards = ({ x, y, power }: Vec2 & { power: number }) => {
 };
 
 export default class Field extends BaseField {
-  app: PIXI.Application;
-  graphics: PIXI.Graphics;
-  scoreText: PIXI.Text;
+  app: Application;
+  graphics: Graphics;
+  scoreText: Text;
   balls: Ball[];
-  constructor(app: PIXI.Application, players: Paddle[], ballData: Ball, options: Partial<Field>){
+  constructor(app: Application, players: Paddle[], ballData: Ball, options: Partial<Field>){
     super(options);
     this.app = app;
-    this.graphics = new PIXI.Graphics();
+    this.graphics = new Graphics();
     this.graphics.lineStyle(2, 0xFFFFFF);
     this.graphics.drawRect(2, 2, this.w - 2, this.h - 2);
     this.graphics.lineStyle(0, 0xFFFFFF);
@@ -38,17 +40,18 @@ export default class Field extends BaseField {
       fill: 0xffffff,
       strokeThickness: 4,
     };
-    this.scoreText = new PIXI.Text('', textSettings);
-    const playerName1 = new PIXI.Text(players[0].name, textSettings);
-    Object.assign(playerName1, { x: 10, y: 5 });
-    const playerName2 = new PIXI.Text(players[1].name, textSettings);
-    Object.assign(playerName2, { x: this.w - playerName2.width - 10, y: 5 });
+    this.scoreText = new Text('', textSettings);
+    Object.assign(this.scoreText, { y: this.h - 5, x: this.w - 10, textBaseline: "bottom", textAlign: "right" });
+    const playerName1 = new Text(players[0].name, textSettings);
+    Object.assign(playerName1, { x: 10, y: 10, textAlign: "left", textBaseline: "top" });
+    const playerName2 = new Text(players[1].name, textSettings);
+    Object.assign(playerName2, { x: this.w - 10, y: 10, textAlign: "right", textBaseline: "top" });
 
     this.updateScore();
     app.ticker.add(this.update.bind(this));
     this.balls = [new Ball(ballData.x, ballData.y, { velocity: ballData.velocity })];
     this.bonuses = [];
-    this.graphics.addChild<PIXI.DisplayObject>(
+    this.graphics.addChild(
       players[0].graphics,
       players[1].graphics,
       this.balls[0].graphics,
@@ -61,8 +64,6 @@ export default class Field extends BaseField {
 
   updateScore(){
     this.scoreText.text = `${this.score.player1} - ${this.score.player2}`;
-    this.scoreText.x = this.w - this.scoreText.width - 10;
-    this.scoreText.y = this.h - this.scoreText.height - 5;
   }
 
   setBalls(balls: ClientBallOptions[]){
@@ -136,19 +137,23 @@ export default class Field extends BaseField {
       fill: 0xffffff,
       strokeThickness: 4,
     };
-    const gameOverText = new PIXI.Text(`${winnerName} wins`, textSettings);
+    const gameOverText = new Text(`${winnerName} wins`, textSettings);
     Object.assign(gameOverText, {
-      x: (this.w - gameOverText.width) / 2,
-      y: (this.h - gameOverText.height) / 2,
+      x: this.w / 2,
+      y: this.h / 2 - 5,
+      textBaseline: "bottom",
     });
     this.graphics.addChild(gameOverText);
-    const exitText = new PIXI.Text("press Escape to return to lobby", {
+    const exitText = new Text("press Escape to return to lobby", {
       fontSize: 24,
       fill: 0xffffff,
       strokeThickness: 4,
     });
-    exitText.x = (this.w - exitText.width) / 2;
-    exitText.y = (this.h - gameOverText.height) / 2 + gameOverText.height;
+    Object.assign(exitText, {
+      x: this.w / 2,
+      y: this.h / 2 + 5,
+      textBaseline: "top",
+    });
     this.graphics.addChild(exitText);
   }
 }

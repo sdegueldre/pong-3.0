@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { Application } from "./engine/Application";
 import Paddle from './objects/Paddle';
 import Field from "./objects/Field";
 import type ClientBallOptions from './objects/Ball';
@@ -10,7 +10,7 @@ export default class Game {
   socket: Socket;
   registeredEvents: string[];
   particleGroups: CollisionParticles[];
-  app: PIXI.Application;
+  app: Application;
   element: HTMLCanvasElement;
   field: Field;
   player1: Paddle;
@@ -21,7 +21,7 @@ export default class Game {
     this.socket = socket;
     this.registeredEvents = [];
     this.particleGroups = [];
-    this.app = new PIXI.Application({
+    this.app = new Application({
       antialias: true,
       width: 1440,
       height: 1080,
@@ -98,7 +98,7 @@ export default class Game {
   }
 
   pointerMoved(e: MouseEvent){
-    this.player!.y = e.clientY * this.app.renderer.screen.height / this.element.clientHeight;
+    this.player!.y = e.clientY * this.app.screen.height / this.element.clientHeight;
     this.socket.emit('playerMove', { y: this.player!.y });
   }
 
@@ -128,7 +128,7 @@ export default class Game {
   }
 
   destroy(){
-    this.app.destroy(true, true);
+    this.app.destroy();
     this.registeredEvents.forEach(type => this.socket.off(type));
     this.socket.emit("leaveRoom");
     window.removeEventListener('pointermove', this.pointerMoved);

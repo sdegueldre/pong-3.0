@@ -20,5 +20,3 @@ It will also start the server on port 3000. You can now access the game at http:
 #### The technologies used for this project are : 
  * [Parcel](https://parceljs.org/) for bundling and building
  * [Socket.io](https://socket.io/) for websocket communication
- * [Pixi.js](https://www.pixijs.com/) for graphics
- 

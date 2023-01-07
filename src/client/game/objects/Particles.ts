@@ -1,4 +1,5 @@
-import * as PIXI from 'pixi.js';
+import { Graphics } from "../engine/Graphics";
+import type { Ticker } from "../engine/Ticker";
 import { range } from '../../../common/utils';
 
 const GRAVITY = 500; // px/s²
@@ -19,20 +20,20 @@ class Particle {
 }
 
 type ParticleInit = Vec2 & {
-  ticker: PIXI.ticker.Ticker;
-  parent: PIXI.Graphics;
+  ticker: Ticker;
+  parent: Graphics;
   birth?: number;
   lifetime?: number;
 }
 export default class CollisionParticles {
-  graphics: PIXI.Graphics;
-  ticker: PIXI.ticker.Ticker;
+  graphics: Graphics;
+  ticker: Ticker;
   birth: number;
   lifetime: number;
   particles: Particle[];
   alive: boolean;
   constructor({ x, y, ticker, parent, birth = Date.now(), lifetime = 500 }: ParticleInit){
-    this.graphics = new PIXI.Graphics();
+    this.graphics = new Graphics();
     this.graphics.x = x;
     this.graphics.y = y;
     this.birth = birth;
