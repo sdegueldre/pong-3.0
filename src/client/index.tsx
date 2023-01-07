@@ -1,5 +1,5 @@
-import ReactDOM from 'react-dom';
-import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
+import React, { useState, useEffect, StrictMode } from 'react';
 import RoomSelector from "./components/RoomSelector";
 import NameSelector from "./components/NameSelector";
 import GameContainer from "./components/GameContainer";
@@ -89,4 +89,5 @@ window.addEventListener("orientationchange", () => {
 });
 
 const socket = ioClient.connect();
-ReactDOM.render(<App socket={socket}/>, document.getElementById('app'));
+const root = createRoot(document.getElementById('app')!);
+root.render(<StrictMode><App socket={socket}/></StrictMode>);
