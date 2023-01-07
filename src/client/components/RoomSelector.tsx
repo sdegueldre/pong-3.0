@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, FormEventHandler } from 'react';
+import type { Socket } from 'socket.io-client';
 
 type Room = {
   id: string,
@@ -16,7 +17,9 @@ const RoomSelector = ({ socket, joinRoom }: { socket: Socket, joinRoom: (id: str
   useEffect(() => {
     socket.on('roomList', setRooms);
     socket.emit('getRoomList');
-    return () => socket.off('roomList');
+    return () => {
+      socket.off('roomList');
+    };
   }, [socket]);
 
   const shareRoom = () => {

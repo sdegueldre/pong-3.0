@@ -3,10 +3,10 @@ import { useState, useEffect, StrictMode } from 'react';
 import RoomSelector from "./components/RoomSelector";
 import NameSelector from "./components/NameSelector";
 import GameContainer from "./components/GameContainer";
-import ioClient from 'socket.io-client/dist/socket.io';
+import { io as ioClient } from 'socket.io-client';
 import Game from './game';
-import { EventEmitter } from "events";
 import type ClientBallOptions from './game/objects/Ball';
+import type { Socket } from 'socket.io-client';
 
 type Spectator = string;
 
@@ -17,7 +17,7 @@ type GameInit = {
   spectators: Spectator[],
 }
 
-const App = ({ socket }: { socket: EventEmitter }) => {
+const App = ({ socket }: { socket: Socket }) => {
   const [game, setGame] = useState<Game | null>(null);
   const [userName, setUserName] = useState('');
   const [spectators, setSpectators] = useState<Spectator[]>([]);
@@ -88,6 +88,6 @@ window.addEventListener("orientationchange", () => {
   }
 });
 
-const socket = ioClient.connect();
+const socket = ioClient();
 const root = createRoot(document.getElementById('app')!);
 root.render(<StrictMode><App socket={socket}/></StrictMode>);
