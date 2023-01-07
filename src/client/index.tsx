@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import React, { useState, useEffect, StrictMode } from 'react';
+import { useState, useEffect, StrictMode } from 'react';
 import RoomSelector from "./components/RoomSelector";
 import NameSelector from "./components/NameSelector";
 import GameContainer from "./components/GameContainer";

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import type Game from '../game';
 
 const GameContainer = ({ game, spectators }: { game: Game, spectators: string[] }) => {

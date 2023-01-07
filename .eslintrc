@@ -5,7 +5,7 @@
         "es6": true,
         "node": true,
     },
-    "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
+    "extends": ["eslint:recommended", "plugin:react/jsx-runtime", "plugin:@typescript-eslint/recommended"],
     "parserOptions": {
         "ecmaVersion": 2019,
         "sourceType": "module",
@@ -37,7 +37,8 @@
         "no-multi-spaces": ["warn"],
         "no-redeclare": ["warn"],
         "no-trailing-spaces": ["warn"],
-        "no-unused-vars": ["warn", {"args": "none", "varsIgnorePattern": "^React$"}],
+        "no-unused-vars": ["off"],
+        "@typescript-eslint/no-unused-vars": ["warn", {"args": "none"}],
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["warn", "nofunc"],
         "no-var": ["error"],
@@ -55,6 +56,8 @@
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-explicit-any": "off",
+        "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off",
     },
     "plugins": [
         "react",
