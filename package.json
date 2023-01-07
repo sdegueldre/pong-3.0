@@ -7,9 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src --max-warnings=0 --ext=js,ts,tsx",
     "dev": "npm start -- --watch",
-    "build": "parcel build src/client/index.html --public-url ./",
+    "build": "esbuild src/client/index.tsx --bundle --minify --sourcemap --outfile=./public/index.js",
     "start": "node src/server/server.js",
-    "watch": "parcel watch src/client/index.html",
+    "watch": "esbuild src/client/index.tsx --bundle --watch --outfile=./public/index.js",
     "checkts": "tsc -p . --noEmit"
   },
   "repository": {
@@ -38,10 +38,9 @@
     "@types/react-dom": "^18.0.1",
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",
+    "esbuild": "0.16.15",
     "eslint": "^7.8.1",
     "eslint-plugin-react": "^7.20.6",
-    "parcel-bundler": "^1.12.4",
-    "sass": "^1.26.5",
     "typescript": "^4.6.3"
   },
   "browserslist": [
