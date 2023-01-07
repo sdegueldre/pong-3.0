@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, FormEventHandler } from 'react';
+import { useState, useEffect, useRef, FormEventHandler } from 'react';
 
 type Room = {
   id: string,

@@ -1,4 +1,4 @@
-import React, { FormEventHandler } from 'react';
+import { FormEventHandler } from 'react';
 
 const NameSelector = ({ chooseUserName }: { chooseUserName: (str: string) => void }) => {
   const userNameSubmit: FormEventHandler<HTMLFormElement> = (ev) => {
