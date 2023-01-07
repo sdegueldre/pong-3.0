@@ -1,18 +1,18 @@
-import * as PIXI from 'pixi.js';
+import { Graphics } from "../../engine/Graphics";
 import { BaseDoubleBall } from '../../../../common/game/objects/bonuses';
 
 export default class DoubleBall extends BaseDoubleBall {
-  graphics: PIXI.Graphics;
+  graphics: Graphics;
   constructor(x: number, y: number){
     super(x, y);
-    const g = new PIXI.Graphics();
+    const g = new Graphics();
     const unit = this.radius / 10;
     g.beginFill(0);
-    g.lineStyle(3, 0xFFFFFF, 1, 0.5);
+    g.lineStyle(3, 0xFFFFFF, 1);
     g.drawCircle(0, 0, this.radius);
     g.endFill();
     g.beginFill(0X00FFFF);
-    g.lineStyle(0, 0, 1, 1);
+    g.lineStyle(0, 0, 1);
     g.drawCircle(-4 * unit, 0, 2.5 * unit);
     g.drawCircle(4 * unit, 0, 2.5 * unit);
     g.endFill();

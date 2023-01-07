@@ -1,15 +1,15 @@
-import * as PIXI from 'pixi.js';
+import { Graphics } from "../engine/Graphics";
 import { BasePaddle } from '../../../common/game/objects';
 
 export default class Paddle extends BasePaddle {
-  graphics: PIXI.Graphics;
+  graphics: Graphics;
   name: string;
   _x!: number;
   _y!: number;
   constructor(options: Vec2 & { name: string }){
     super(options);
     this.name = options.name;
-    this.graphics = new PIXI.Graphics();
+    this.graphics = new Graphics();
     this.graphics.beginFill(this.color);
     this.graphics.drawRect(-this.w / 2, -this.h / 2, this.w, this.h);
     this.graphics.endFill();
